@@ -14,6 +14,8 @@ import NewMoneyIn from './src/ExtraScreen/NewMoneyIn';
 import NewMoneyOut from './src/ExtraScreen/NewMoneyOut';
 import SelectPartyScreen from './src/ExtraScreen/SelectPartyScreen';
 import SelectItemsScreen from './src/ExtraScreen/SelectItemsScreen';
+import CustomerParcel from './src/ExtraScreen/CustomerParcel';
+import ConnectPrinter from './src/printer/ConnectPrinter';
 
 const Stack = createNativeStackNavigator();
 
@@ -138,6 +140,36 @@ const StackComponent = () => {
          <Stack.Screen
           name="Select Items"
           component={SelectItemsScreen}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#008AD0',
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Search Customer"
+          component={CustomerParcel}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#008AD0',
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+          }}
+        />
+          <Stack.Screen
+          name="Connect Printer"
+          component={ConnectPrinter}
           options={{
             headerShown: true,
             headerStyle: {

@@ -7,13 +7,12 @@ import Inventory from '../TabMenu/Inventory';
 import Payments from '../TabMenu/Payments';
 import Settings from '../TabMenu/Settings';
 
-
 const Tab = createBottomTabNavigator();
 
 export default function TabMenus() {
   return (
-    <Tab.Navigator 
-           initialRouteName="Dashboard"
+    <Tab.Navigator
+      initialRouteName="Dashboard"
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color}) => {
           let iconName;
@@ -23,7 +22,7 @@ export default function TabMenus() {
           } else if (route.name === 'Party') {
             iconName = focused ? 'person' : 'person-outline';
           } else if (route.name === 'Payments') {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = focused ? 'wallet' : 'wallet-outline';
           } else if (route.name === 'Inventory') {
             iconName = focused ? 'cube' : 'cube-outline';
           } else if (route.name === 'Settings') {
@@ -33,75 +32,82 @@ export default function TabMenus() {
         },
         // tabBarActiveTintColor: '#008AD0',
         // tabBarInactiveTintColor: 'silver',
-      })}
-        >
-    <Tab.Screen 
-        name='Dashboard' 
-        component={DashBoardScreen} 
+      })}>
+      <Tab.Screen
+        name="Dashboard"
+        component={DashBoardScreen}
         options={{
-                headerShown: false,  
-                headerStyle: {
-                backgroundColor: '#008AD0',
-                },
-                headerTintColor: 'black',
-                headerTitleStyle: {
-                fontWeight: 'bold',
-                color: 'white',
-                },
-         }}/>
-    <Tab.Screen name='Party' component={PartyList}    
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#008AD0',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Party"
+        component={PartyList}
         options={{
-                headerShown: false,  
-                headerStyle: {
-                backgroundColor: '#008AD0',
-                },
-                headerTintColor: 'black',
-                headerTitleStyle: {
-                fontWeight: 'bold',
-                color: 'white',
-                },
-         }}/>
-    <Tab.Screen 
-        name='Inventory' 
-        component={Inventory}    
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#008AD0',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Inventory"
+        component={Inventory}
         options={{
-                headerShown: false,  
-                headerStyle: {
-                backgroundColor: '#008AD0',
-                },
-                headerTintColor: 'black',
-                headerTitleStyle: {
-                fontWeight: 'bold',
-                color: 'white',
-                },
-         }}/>
-    <Tab.Screen 
-        name='Payments' 
-        component={Payments}    
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#008AD0',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Payments"
+        component={Payments}
         options={{
-                headerShown: false,  
-                headerStyle: {
-                backgroundColor: '#008AD0',
-                },
-                headerTintColor: 'black',
-                headerTitleStyle: {
-                fontWeight: 'bold',
-                color: 'white',
-                },
-         }}/>
-    <Tab.Screen name='Settings' 
-        component={Settings}    
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#008AD0',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
         options={{
-                headerShown: false,  
-                headerStyle: {
-                backgroundColor: '#008AD0',
-                },
-                headerTintColor: 'black',
-                headerTitleStyle: {
-                fontWeight: 'bold',
-                color: 'white',
-                },
-         }}/>
-  </Tab.Navigator>
-  )
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#008AD0',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
+        }}
+      />
+    </Tab.Navigator>
+  );
 }

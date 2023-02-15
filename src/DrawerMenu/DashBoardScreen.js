@@ -105,7 +105,8 @@ export default function DashBoardScreen({navigation}) {
       
 
       <TouchableOpacity style={{backgroundColor: 'white', alignSelf: 'center', marginBottom: 10,
-                       padding: 6, borderColor: 'green', borderRadius: 5, borderWidth: 1}}>
+                       padding: 6, borderColor: 'green', borderRadius: 5, borderWidth: 1}}
+                       onPress={() => navigation.navigate('Connect Printer')}>
         <Text style={{color: 'red', fontWeight: 'bold', fontSize: 20, alignSelf: 'center'}}> CONNECT TO PRINTER </Text>
         <Text style={{color: 'green', fontWeight: '600', alignSelf: 'center'}}> PERMISSION | BLUETOOTH | LOCATION </Text>
       </TouchableOpacity>
