@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'silver',
     width: '48%',
+    color: 'black',
     marginLeft: 6,
     borderWidth: 1,
     marginTop: 10,

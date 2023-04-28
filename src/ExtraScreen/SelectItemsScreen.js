@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {Checkbox} from 'react-native-paper';
+// import {BluetoothManager,BluetoothEscposPrinter,BluetoothTscPrinter} from 'react-native-bluetooth-escpos-printer';
 
 export default function SelectItemsScreen({navigation}) {
   const [transactionNo, setTransactionNo] = useState();
@@ -22,8 +23,10 @@ export default function SelectItemsScreen({navigation}) {
   const [showCategories, setShowCategories] = useState(true)
   const [showCategoriesTwo, setShowCategoriesTwo] = useState(false)
   const [showCategoriesThree, setShowCategoriesThree] = useState(false)
+  const [showCategoriesSweet, setShowCategoriesSweet] = useState(false)
+  const [showCategoriesIce, setShowCategoriesIce] = useState(false)
 
-      // handle Cash Button
+// handle Cash Button
  const handleSelectCash = () => {
   setDefaultCash(true)
    setDefaultCheque(false)
@@ -65,6 +68,88 @@ const handleCategoriesThree = () => {
   setShowCategoriesTwo(false)
   setShowCategoriesThree(true)
 }
+
+//  Handle Categories Sweet
+const handleCategoriesSweet = () => {
+  setShowCategories(false)
+  setShowCategoriesTwo(false)
+  setShowCategoriesThree(false)
+  setShowCategoriesIce(false)
+  setShowCategoriesSweet(true)
+ 
+}
+
+//  Handle Categories Ice-Creams
+const handleCategoriesIce = () => {
+  setShowCategories(false)
+  setShowCategoriesTwo(false)
+  setShowCategoriesThree(false)
+  setShowCategoriesSweet(false)
+  setShowCategoriesIce(true)
+  
+}
+
+// Handle Print Button
+// const handlePrintButton = async () => {
+// // navigation.navigate('Dashboard');   //  navigate component on Dashboard
+// await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.CENTER);
+// await BluetoothEscposPrinter.setBlob(0);
+// await  BluetoothEscposPrinter.printText("广州俊烨\n\r",{
+//   encoding:'GBK',
+//   codepage:0,
+//   widthtimes:3,
+//   heigthtimes:3,
+//   fonttype:1
+// });
+// await BluetoothEscposPrinter.setBlob(0);
+// await  BluetoothEscposPrinter.printText("销售单\n\r",{
+//   encoding:'GBK',
+//   codepage:0,
+//   widthtimes:0,
+//   heigthtimes:0,
+//   fonttype:1
+// });
+// await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.LEFT);
+// await  BluetoothEscposPrinter.printText("客户：零售客户\n\r",{});
+// await  BluetoothEscposPrinter.printText("单号：xsd201909210000001\n\r",{});
+// await  BluetoothEscposPrinter.printText("日期："+(dateFormat(new Date(), "yyyy-mm-dd h:MM:ss"))+"\n\r",{});
+// await  BluetoothEscposPrinter.printText("销售员：18664896621\n\r",{});
+// await  BluetoothEscposPrinter.printText("--------------------------------\n\r",{});
+// let columnWidths = [12,6,6,8];
+// await BluetoothEscposPrinter.printColumn(columnWidths,
+//   [BluetoothEscposPrinter.ALIGN.LEFT,BluetoothEscposPrinter.ALIGN.CENTER,BluetoothEscposPrinter.ALIGN.CENTER,BluetoothEscposPrinter.ALIGN.RIGHT],
+//   ["商品",'数量','单价','金额'],{});
+// await BluetoothEscposPrinter.printColumn(columnWidths,
+//   [BluetoothEscposPrinter.ALIGN.LEFT,BluetoothEscposPrinter.ALIGN.LEFT,BluetoothEscposPrinter.ALIGN.CENTER,BluetoothEscposPrinter.ALIGN.RIGHT],
+//   ["React-Native定制开发我是比较长的位置你稍微看看是不是这样?",'1','32000','32000'],{});
+//     await  BluetoothEscposPrinter.printText("\n\r",{});
+//   await BluetoothEscposPrinter.printColumn(columnWidths,
+//   [BluetoothEscposPrinter.ALIGN.LEFT,BluetoothEscposPrinter.ALIGN.LEFT,BluetoothEscposPrinter.ALIGN.CENTER,BluetoothEscposPrinter.ALIGN.RIGHT],
+//   ["React-Native定制开发我是比较长的位置你稍微看看是不是这样?",'1','32000','32000'],{});
+// await  BluetoothEscposPrinter.printText("\n\r",{});
+// await  BluetoothEscposPrinter.printText("--------------------------------\n\r",{});
+// await BluetoothEscposPrinter.printColumn([12,8,12],
+//   [BluetoothEscposPrinter.ALIGN.LEFT,BluetoothEscposPrinter.ALIGN.LEFT,BluetoothEscposPrinter.ALIGN.RIGHT],
+//   ["合计",'2','64000'],{});
+// await  BluetoothEscposPrinter.printText("\n\r",{});
+// await  BluetoothEscposPrinter.printText("折扣率：100%\n\r",{});
+// await  BluetoothEscposPrinter.printText("折扣后应收：64000.00\n\r",{});
+// await  BluetoothEscposPrinter.printText("会员卡支付：0.00\n\r",{});
+// await  BluetoothEscposPrinter.printText("积分抵扣：0.00\n\r",{});
+// await  BluetoothEscposPrinter.printText("支付金额：64000.00\n\r",{});
+// await  BluetoothEscposPrinter.printText("结算账户：现金账户\n\r",{});
+// await  BluetoothEscposPrinter.printText("备注：无\n\r",{});
+// await  BluetoothEscposPrinter.printText("快递单号：无\n\r",{});
+// await  BluetoothEscposPrinter.printText("打印时间："+(dateFormat(new Date(), "yyyy-mm-dd h:MM:ss"))+"\n\r",{});
+// await  BluetoothEscposPrinter.printText("--------------------------------\n\r",{});
+// await  BluetoothEscposPrinter.printText("电话：\n\r",{});
+// await  BluetoothEscposPrinter.printText("地址:\n\r\n\r",{});
+// await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.CENTER);
+// await  BluetoothEscposPrinter.printText("欢迎下次光临\n\r\n\r\n\r",{});
+// await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.LEFT);
+
+
+// }
  
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -74,18 +159,21 @@ const handleCategoriesThree = () => {
           marginTop: 10,
           justifyContent: 'flex-end',
         }}>
+
         {/* Item */}
         <TouchableOpacity
           style={styles.buttonStyle}
           onPress={() => navigation.navigate('New Item')}>
           <Text style={styles.buttonText}>Item +</Text>
         </TouchableOpacity>
+
         {/* Hold */}
         <TouchableOpacity
           style={styles.buttonStyle}
           onPress={() => navigation.navigate('Select Items')}>
           <Text style={styles.buttonText}>Hold</Text>
         </TouchableOpacity>
+
         {/* Customer/Parcel */}
         <TouchableOpacity
           style={styles.buttonStyle}
@@ -99,155 +187,108 @@ const handleCategoriesThree = () => {
       <ScrollView>
         <View style={{flexDirection: 'row'}}>
           <View
-            style={{
-              backgroundColor: 'green',
-              width: 80,
-              marginLeft: 3,
-              height: 610,
-            }}>
+            style={styles.categoryView}>
             <TouchableOpacity
-              style={{
-                backgroundColor: 'yellow',
-                height: 40,
-                paddingTop: 10,
-                marginTop: 5,
-              }}
+              style={styles.categoryStyle}
               onPress={() => handleCategories()}>
-              <Text style={{alignSelf: 'center'}}>Category 1</Text>
+              <Text style={styles.categoryText}>Drink's</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                backgroundColor: 'yellow',
-                height: 40,
-                paddingTop: 10,
-                marginTop: 5,
-              }}
+              style={styles.categoryStyle}
               onPress={() => handleCategoriesTwo()}>
-              <Text style={{alignSelf: 'center'}}>Category 2</Text>
+              <Text style={styles.categoryText}>Snack's</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                backgroundColor: 'yellow',
-                height: 40,
-                paddingTop: 10,
-                marginTop: 5,
-              }}
+              style={styles.categoryStyle}
               onPress={() => handleCategoriesThree()}>
-              <Text style={{alignSelf: 'center'}}>Category 3</Text>
+              <Text style={styles.categoryText}>Food's</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.categoryStyle}
+              onPress={() => handleCategoriesSweet()}>
+              <Text style={styles.categoryText}>Sweet's</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.categoryStyle}
+              onPress={() => handleCategoriesIce()}>
+              <Text style={styles.categoryText}>Ice-Cream's</Text>
             </TouchableOpacity>
           </View>
 
+            {/* Show Category One */}
           { !showCategories ? null :<View
-            style={{
-              // backgroundColor: 'red',
-              marginLeft: 3,
-              width: 315,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              marginBottom: 10,
-            }}>
+            style={styles.listView}>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>Coke</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>Pepsi</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>Dew</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+             style={styles.imageSize}>
+              <Text style={styles.imageText}>Coffee</Text>
             </TouchableOpacity>
           </View>}
 
+          {/* Show Category Two */}
           { !showCategoriesTwo ? null :<View
-            style={{
-              // backgroundColor: 'yellow',
-              marginLeft: 3,
-              width: 315,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              marginBottom: 10,
-            }}>
+            style={styles.listView}>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>Burger</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+             style={styles.imageSize}>
+              <Text style={styles.imageText}>Pizza</Text>
             </TouchableOpacity>
           </View>}
 
+            {/* Show Category Three */}
           { !showCategoriesThree? null :<View
-            style={{
-              // backgroundColor: 'red',
-              marginLeft: 3,
-              width: 315,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              marginBottom: 10,
-            }}>
+            style={styles.listView}>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>Sahi Paneer</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>Mix Veg</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                height: 120,
-                width: 95,
-                backgroundColor: 'white',
-                margin: 5,
-              }}>
-              <Text style={{color: 'green'}}>No Image</Text>
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>Razma</Text>
+            </TouchableOpacity>
+          </View>}
+
+            {/* Show Category Sweet */}
+          { !showCategoriesSweet ? null :<View
+            style={styles.listView}>
+            <TouchableOpacity
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>besan laddu</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+             style={styles.imageSize}>
+              <Text style={styles.imageText}>rasmalai</Text>
+            </TouchableOpacity>
+          </View>}
+
+            {/* Show Category Ice-Cream */}
+          { !showCategoriesIce ? null :<View
+            style={styles.listView}>
+            <TouchableOpacity
+              style={styles.imageSize}>
+              <Text style={styles.imageText}>American nuts</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+             style={styles.imageSize}>
+              <Text style={styles.imageText}>Vanilla</Text>
             </TouchableOpacity>
           </View>}
         </View>
@@ -272,6 +313,7 @@ const handleCategoriesThree = () => {
           </TouchableOpacity>
         </View>
       </View>
+
       {!checked ? null : (
         <View style={{flexDirection: 'row'}}>
           {/* Upi/Bank/POS */}
@@ -280,11 +322,13 @@ const handleCategoriesThree = () => {
             onPress={() => [handleSelectUpi(), setTransactionShow(!transactionShow)]}>
             <Text style={defaultUpi ? styles.textSelect : styles.textColor}>Upi/Bank/POS</Text>
           </TouchableOpacity>
+
           {/* Cash */}
           <TouchableOpacity style={defaultCash ? styles.buttonSelect : styles.buttonStyleCash} 
             onPress={() => handleSelectCash()}>
             <Text style={defaultCash ? styles.textSelect : styles.textColor}>Cash</Text>
           </TouchableOpacity>
+          
           {/* Cheque */}
           <TouchableOpacity
             style={defaultCheque ? styles.buttonSelect : styles.buttonStyleCash}
@@ -293,6 +337,7 @@ const handleCategoriesThree = () => {
           </TouchableOpacity>
         </View>
       )}
+
       {/* Transaction Number */}
       {!transactionShow ? null : (
         <View>
@@ -304,6 +349,7 @@ const handleCategoriesThree = () => {
           />
         </View>
       )}
+      
       {/* Cheque Number */}
       {!chequeShow ? null : (
         <View>
@@ -344,7 +390,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#008AD0',
     fontWeight: '500',
-    marginTop: 6,
+    marginTop: 6.5,
   },
   bankButton: {
     borderColor: '#008AD0',
@@ -452,5 +498,45 @@ const styles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     fontSize: 10,
+  },
+  categoryStyle: {
+    backgroundColor: 'yellow',
+    height: 40,
+    paddingTop: 10,
+    marginTop: 5,
+    marginHorizontal: 2,
+    borderRadius: 5,
+  },
+  imageSize: {
+    height: 120,
+    width: 95,
+    backgroundColor: 'blue',
+    margin: 5,
+    borderRadius: 5,
+  },
+  imageText: {
+    color: 'white',
+    alignSelf: 'center',
+    marginTop: 50,
+    fontWeight: '800',
+  },
+  categoryView: {
+    backgroundColor: 'silver',
+    width: 90,
+    // marginHorizontal: 3,
+    marginLeft: 3,
+    height: 610,
+  },
+  categoryText: {
+    alignSelf: 'center',
+    fontWeight: 'bold', 
+    color: 'green',
+  },
+  listView: {
+    marginLeft: 3,
+    width: 315,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 10,
   },
 });

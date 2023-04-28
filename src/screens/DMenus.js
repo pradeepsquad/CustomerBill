@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, View, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {Text, View, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/drawer';
 import 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 import SaleListScreen from '../DrawerMenu/SaleListScreen';
 import ReportScreen from '../DrawerMenu/ReportScreen';
@@ -27,8 +28,7 @@ export default function DMenus() {
   return (
     <Drawer.Navigator
       useLegacyImplementation
-      drawerContent={props => <CustomDrawerContent {...props} />}
-      initialRouteName="Home">
+      drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
         name="Home"
         component={TabMenus}
@@ -44,7 +44,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitle: 'Dashboard',
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -67,7 +67,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -89,7 +89,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -111,7 +111,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -133,7 +133,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -155,7 +155,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -177,7 +177,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -199,7 +199,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -221,7 +221,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -243,7 +243,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -251,13 +251,13 @@ export default function DMenus() {
         }}
       />
       <Drawer.Screen
-        name="Greetings"
+        name="Chat"
         component={Greetings}
         options={{
           headerShown: true,
           drawerIcon: ({focused}) => (
             <Ionicons
-              name="phone-portrait"
+              name="chatbubbles"
               size={25}
               color={focused ? '#008AD0' : '#A9A9A9'}
             />
@@ -265,7 +265,7 @@ export default function DMenus() {
           headerStyle: {
             backgroundColor: '#008AD0',
           },
-          headerTintColor: 'black',
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
             color: 'white',
@@ -277,77 +277,150 @@ export default function DMenus() {
 }
 
 // Custom Drawer Menus
-function CustomDrawerContent(props) {
+function CustomDrawerContent(props, {navigation}) {
+  const [filePath, setFilePath] = useState();
+  // upload Profile
+  const handleUploadImages = type => {
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        // alert('User cancelled camera picker');
+        console.log('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        // alert('Camera not available on device');
+        console.log('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        // alert('Permission not satisfied');
+        console.log('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        // alert(response.errorMessage);
+        console.log(response.errorMessage);
+        return;
+      }
+      // console.log('base64 -> ', response.assets[0].base64);
+      // console.log('uri -> ', response.assets[0].uri);
+      // console.log('width -> ', response.assets[0].width);
+      // console.log('height -> ', response.assets[0].height);
+      // console.log('fileSize -> ', response.assets[0].fileSize);
+      // console.log('type -> ', response.assets[0].type);
+      // console.log('fileName -> ', response.assets[0].fileName);
+      setFilePath(response.assets[0].uri);
+    });
+  };
   return (
     <DrawerContentScrollView {...props} showsVerticalScrollIndicator={false}>
       {/* User Profile */}
       <View style={{backgroundColor: '#008AD0', marginTop: -4}}>
-        <Text
-          style={{
-            color: 'white',
-            fontWeight: '600',
-            alignSelf: 'center',
-            marginTop: 12,
-          }}>
-          OP : 8193931712
-        </Text>
-        <Image
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: 80 / 2,
-            borderColor: 'white',
-            borderWidth: 2,
-            alignSelf: 'center',
-            marginTop: 10,
-            backgroundColor: 'white',
-          }}
-        />
-        <Text
-          style={{
-            color: 'white',
-            fontWeight: '600',
-            alignSelf: 'center',
-            marginTop: 12,
-          }}>
-          ABC
-        </Text>
-        <Text
-          style={{
-            color: 'white',
-            fontWeight: '600',
-            alignSelf: 'center',
-            marginTop: 12,
-          }}>
-          8193931712
-        </Text>
+        <Text style={styles.opText}>OP : 8193931712</Text>
         <TouchableOpacity
-          style={{
-            borderWidth: 1,
-            borderColor: 'white',
-            height: 40,
-            width: 150,
-            marginBottom: 10,
-            marginTop: 10,
-            alignSelf: 'center',
-            borderRadius: 5,
-          }}>
-          <Text
-            style={{
-              color: 'white',
-              fontWeight: '600',
-              alignSelf: 'center',
-              marginTop: 10,
-            }}>
-            CHANGE PROFILE
-          </Text>
+          onPress={() => props.navigation.navigate('Edit Profile')}>
+          {!filePath ?<Image style={styles.image} source={require('../assets/pack.jpeg')} />:
+          <Image style={styles.image} source={{uri: filePath}} />}
+        </TouchableOpacity>
+
+        <Text style={styles.nameStyle}>ABC</Text>
+        <Text style={styles.noStyle}>8193931712</Text>
+        <TouchableOpacity
+          style={styles.profileView}
+          onPress={() => handleUploadImages('photo')}>
+          <Text style={styles.profileText}>CHANGE PROFILE</Text>
         </TouchableOpacity>
       </View>
       <DrawerItemList {...props} />
-      <DrawerItem 
-        label='Logout'
-        style={{marginLeft: 70}}
-      />
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={() => Alert.alert('Logout', 'Are you sure ?',[
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'Cancel',
+          },
+          {
+            text: 'Ok', onPress: () => console.log('OK Pressed')
+          }
+        ])}>
+        <Ionicons
+          name="log-out"
+          size={35}
+          color="white"
+          style={{marginLeft: 15}}
+        />
+        <Text
+          style={styles.logoutText}>
+          Logout
+        </Text>
+      </TouchableOpacity>
     </DrawerContentScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  opText: {
+    color: 'white',
+    fontWeight: '600',
+    alignSelf: 'center',
+    marginTop: 12,
+  },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 80 / 2,
+    borderColor: 'white',
+    borderWidth: 1,
+    alignSelf: 'center',
+    marginTop: 10,
+    backgroundColor: 'white',
+  },
+  noStyle: {
+    color: 'white',
+    fontWeight: '600',
+    alignSelf: 'center',
+    marginTop: 12,
+  },
+  nameStyle: {
+    color: 'white',
+    fontWeight: '600',
+    alignSelf: 'center',
+    marginTop: 12,
+  },
+  profileView: {
+    borderWidth: 1,
+    borderColor: 'white',
+    height: 40,
+    width: 150,
+    marginBottom: 10,
+    marginTop: 10,
+    alignSelf: 'center',
+    borderRadius: 5,
+  },
+  profileText: {
+    color: 'white',
+    fontWeight: '600',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    backgroundColor: '#008AD0',
+    marginBottom: 3,
+    width: 270,
+    alignSelf: 'center',
+    borderRadius: 5,
+  },
+  logoutText: {
+    color: 'white',
+    fontWeight: 'bold',
+    marginLeft: 25,
+    marginTop: 10,
+  },
+});

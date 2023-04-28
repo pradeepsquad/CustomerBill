@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icons from 'react-native-vector-icons/Ionicons';
@@ -8,21 +16,20 @@ export default function MoneyInList({navigation}) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
 
   useEffect(() => {
     let today = new Date();
-    let date = today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
+    let date =
+      today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
     setStartDate(date);
     setEndDate(date);
-    
-  },[]);
+  }, []);
   return (
     <SafeAreaView styles={{flex: 1}}>
-       <ScrollView>
+      <ScrollView>
         <View style={{marginHorizontal: 20, marginTop: 30}}>
-        {/* Selected Days */}
+          {/* Selected Days */}
           <SelectDropdown
             buttonStyle={styles.dropdownButton}
             buttonTextStyle={styles.dropdownButtonText}
@@ -44,19 +51,21 @@ export default function MoneyInList({navigation}) {
             dropdownIconPosition={'right'}
           />
           <View style={{flexDirection: 'row'}}>
-          {/* started Date */}
-          <TextInput 
-            style={styles.textInput}
-            value={startDate}
-            onChangeText={(startDate) => setStartDate(startDate)}
-          />
-          {/* End date */}
-          <TextInput 
-            style={styles.textInput}
-            value={endDate}
-            onChangeText={(endDate) => setEndDate(endDate)}
-          />
+            {/* started Date */}
+            <TextInput
+              style={styles.textInput}
+              value={startDate}
+              onChangeText={startDate => setStartDate(startDate)}
+            />
+
+            {/* End date */}
+            <TextInput
+              style={styles.textInput}
+              value={endDate}
+              onChangeText={endDate => setEndDate(endDate)}
+            />
           </View>
+          
           {/* Amount and Count */}
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <View style={styles.AmountView}>
@@ -71,12 +80,13 @@ export default function MoneyInList({navigation}) {
         </View>
       </ScrollView>
 
-
-      <TouchableOpacity style={styles.newButton} onPress={() => navigation.navigate('New MoneyIn')}>
+      <TouchableOpacity
+        style={styles.newButton}
+        onPress={() => navigation.navigate('New Money In')}>
         <Text style={styles.buttonText}>NEW MONEY IN</Text>
       </TouchableOpacity>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -116,12 +126,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   AmountView: {
-    backgroundColor: 'white', 
+    backgroundColor: 'white',
     height: 50,
-    width: '49%', 
+    width: '49%',
     marginLeft: '.5%',
-    marginRight: '.7%', 
-    borderRadius: 4, 
+    marginRight: '.7%',
+    borderRadius: 4,
     paddingTop: 5,
   },
   textInput: {
@@ -129,6 +139,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'silver',
     width: '48%',
+    color: 'black',
     marginLeft: 6,
     borderWidth: 1,
     marginTop: 10,
@@ -151,4 +162,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 8,
   },
-})
+});

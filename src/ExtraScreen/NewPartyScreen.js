@@ -16,7 +16,7 @@ import {useDispatch} from 'react-redux';
 import {newCustomer} from '../Redux/reducerSlice/NewCustomerSlice';
 import {newSupplier} from '../Redux/reducerSlice/NewSupplierSlice';
 
-export default function NewPartyScreen() {
+export default function NewPartyScreen({navigation}) {
   const [customStyleIndex, setCustomStyleIndex] = useState(0);
   const [customerName, setCustomerName] = useState('');
   const [supplierName, setSupplierName] = useState('');
@@ -91,6 +91,7 @@ export default function NewPartyScreen() {
       dispatch(newCustomer({customerName, phoneNumber, billingAddress, gstNumber, selectBillingState, billingPinCode,
         deliveryAddress, selectDeliveryState, deliveryPinCode, openingBalance, selectBalanceType, selectBillingTerm
       }))
+      navigation.navigate('Party');
   }
 
   // Handle Supplier
@@ -98,6 +99,7 @@ export default function NewPartyScreen() {
     dispatch(newSupplier({supplierName, phoneNumber, billingAddress, gstNumber, selectBillingState, billingPinCode,
       deliveryAddress, selectDeliveryState, deliveryPinCode, openingBalance, selectBalanceType, selectBillingTerm
     }))
+    navigation.navigate('Party');
   }
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -439,7 +441,7 @@ export default function NewPartyScreen() {
                     setBillingAddress(billingAddress)
                   }
                 />
-                  {/* show and Hide GST */}
+                {/* show and Hide GST */}
                 <TouchableOpacity
                   style={styles.gstButton}
                   onPress={() => setOpenGst(!openGst)}>
@@ -698,6 +700,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 40,
     marginTop: 10,
+    color: 'black',
     borderColor: 'silver',
     borderWidth: 1,
     paddingLeft: 10,

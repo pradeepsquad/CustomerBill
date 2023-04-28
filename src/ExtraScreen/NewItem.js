@@ -5,19 +5,20 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  Platform,
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icons from 'react-native-vector-icons/Ionicons';
-import ImagePicker from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import { useDispatch } from 'react-redux';
 import { addProduct } from '../Redux/reducerSlice/AddProductSlice';
 import { addService } from '../Redux/reducerSlice/AddServiceSlice';
 
 
-export default function NewItem() {
+export default function NewItem({navigation}) {
   const [customStyleIndex, setCustomStyleIndex] = useState(0);
   const [productName, setProductName] = useState('');
   const [serviceName, setServiceName] = useState('');
@@ -66,6 +67,7 @@ export default function NewItem() {
     dispatch(addProduct({productName, salePrice, selectPriceUnit, optionalMRP, purchasePrice,itemCategory,selectGST, cessValue,
       HSNCode, itemCode, barCode, itemDescription, openingStock, lowStock, storageLocation, selectBulkPurchase,
       saleUnit, purchaseUnit}))
+      navigation.navigate('Inventory');
   }
 
   // Handle Service
@@ -73,41 +75,47 @@ export default function NewItem() {
     dispatch(addService({serviceName, salePrice, selectPriceUnit, optionalMRP, purchasePrice,itemCategory,selectGST, cessValue,
       HSNCode, itemCode, barCode, itemDescription, openingStock, lowStock, storageLocation, selectBulkPurchase,
       saleUnit, purchaseUnit}))
+      navigation.navigate('Inventory');
   }
 
   // Upload Images
+  const handleUploadImages = (type) => {
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, (response) => {
+      console.log('Response = ', response);
 
-  // const handleImages = () => {
-  //   let options = {
-  //     title: 'Select Image',
-  //     customButtons: [{
-  //       name: 'customOptionKey',
-  //       title: 'choose Photo from Custom Option'
-  //     },
-  //   ],
-  //   storageOptions: {
-  //     skipBackup: true,
-  //     path: 'image',
-  //   },
-  //   };
-  //   ImagePicker.showImagePicker(options, (response) => {
-  //     console.log('Response =', response);
-
-  //     if(response.didCancel){
-  //       console.log('User Cancelled image Picker');
-  //     } else if(response.error){
-  //       console.log('ImagePicker Error: ', response.error);
-  //     } else if(response.customButtons){
-  //       console.log(
-  //         'User tapped custom button: ',
-  //         response.customButtons
-  //       );
-  //       alert(response.customButtons);
-  //     }else{
-  //       alert('wrong')
-  //     }
-  //   })
-  // }
+      if (response.didCancel) {
+        // alert('User cancelled camera picker');
+        console.log('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        // alert('Camera not available on device');
+        console.log('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        // alert('Permission not satisfied');
+        console.log('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        // alert(response.errorMessage);
+        console.log(response.errorMessage);
+        return;
+      }
+      // console.log('base64 -> ', response.base64);
+      // console.log('uri -> ', response.uri);
+      // console.log('width -> ', response.width);
+      // console.log('height -> ', response.height);
+      // console.log('fileSize -> ', response.fileSize);
+      // console.log('type -> ', response.type);
+      // console.log('fileName -> ', response.fileName);
+      setFilePath(response);
+    });
+  }
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -122,7 +130,7 @@ export default function NewItem() {
               marginBottom: 8,
               borderRadius: 2,
               alignSelf: 'flex-end',
-            }} onPress={() => handleImages()}>
+            }} onPress={() => handleUploadImages('photo')}>
             <Text
               style={{
                 color: 'white',
@@ -853,6 +861,7 @@ const styles = StyleSheet.create({
   textInput: {
     backgroundColor: 'white',
     height: 40,
+    color: 'black',
     borderColor: 'silver',
     borderWidth: 1,
     marginTop: 8,

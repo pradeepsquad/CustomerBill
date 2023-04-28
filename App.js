@@ -1,5 +1,13 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider} from 'react-redux';
@@ -16,6 +24,10 @@ import SelectPartyScreen from './src/ExtraScreen/SelectPartyScreen';
 import SelectItemsScreen from './src/ExtraScreen/SelectItemsScreen';
 import CustomerParcel from './src/ExtraScreen/CustomerParcel';
 import ConnectPrinter from './src/printer/ConnectPrinter';
+import EditProfile from './src/Profile/EditProfile';
+import ChatScreen from './src/chat/ChatScreen';
+import ModifyStock from './src/ExtraScreen/ModifyStock';
+import Profile from './src/ExtraScreen/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,7 +43,7 @@ export default function App() {
 const StackComponent = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="DrawerMenus">
+      <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen
           name="Welcome"
           component={SplashScreen}
@@ -55,7 +67,7 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
@@ -70,7 +82,7 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
@@ -85,7 +97,7 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
@@ -93,14 +105,14 @@ const StackComponent = () => {
           }}
         />
         <Stack.Screen
-          name="New MoneyIn"
+          name="New Money In"
           component={NewMoneyIn}
           options={{
             headerShown: true,
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
@@ -115,7 +127,7 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
@@ -130,14 +142,14 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
             },
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Select Items"
           component={SelectItemsScreen}
           options={{
@@ -145,7 +157,7 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
@@ -160,14 +172,14 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
             },
           }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="Connect Printer"
           component={ConnectPrinter}
           options={{
@@ -175,7 +187,70 @@ const StackComponent = () => {
             headerStyle: {
               backgroundColor: '#008AD0',
             },
-            headerTintColor: 'black',
+            headerTintColor: 'white',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="Profile"
+          component={EditProfile}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#008AD0',
+            },
+            headerTintColor: 'white',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="Chats"
+          component={ChatScreen}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#008AD0',
+            },
+            headerTintColor: 'white',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+          }}
+        />
+
+<Stack.Screen
+          name="Modify Item Stock"
+          component={ModifyStock}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#008AD0',
+            },
+            headerTintColor: 'white',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Edit Profile"
+          component={Profile}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#008AD0',
+            },
+            headerTintColor: 'white',
             headerTitleStyle: {
               fontWeight: 'bold',
               color: 'white',
@@ -186,11 +261,91 @@ const StackComponent = () => {
     </NavigationContainer>
   );
 };
+
 // Authentication Component
-const Auth = () => {
-  return (
-    <View>
-      <Text>hello</Text>
-    </View>
-  );
+const Auth = ({navigation}) => {
+const [phone, setPhone] = useState();
+const [confirmation, setConfirmation] = useState(null)
+
+
+// Handle Submit Button
+  const handleSubmitButton = () => {
+    navigation.replace('DrawerMenus')
+  };
+
+  const handleConfirmation = () => {
+    navigation.replace('DrawerMenus')
+  }
+
+if(confirmation){return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View style={styles.mainView}>
+          {/* Phone Number */}
+          <TextInput
+            style={styles.textInput}
+            placeholder="Phone Number"
+            placeholderTextColor="black"
+            value={phone}
+            onChangeText={(phone) => setPhone(phone)}
+          />
+        </View>
+        {/* Submit Button */}
+        <View style={{marginHorizontal: 20, marginTop: 30}}>
+          <TouchableOpacity
+            style={styles.buttonSubmitView}
+            onPress={() => handleSubmitButton()}>
+            <Text style={styles.buttonSubmitText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );}
+  return(
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView>
+        <View style={{marginTop: 250, marginHorizontal: 20}}>
+          <Text>Otp Screen</Text>
+        </View>
+        <TouchableOpacity style={styles.buttonSubmitView} onPress={() => handleConfirmation()}>
+          <Text style={styles.buttonSubmitText}>CONFIRM</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  )
 };
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  mainView: {
+    marginTop: 250,
+    marginHorizontal: 20,
+  },
+  textInput: {
+    height: 50,
+    borderColor: 'silver',
+    color: 'black',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingLeft: 15,
+    marginTop: 15,
+  },
+  buttonSubmitView: {
+    height: 50,
+    backgroundColor: '#008AD0',
+    width: 250,
+    borderRadius: 5,
+    alignSelf: 'center',
+  },
+  buttonSubmitText: {
+    marginTop: 15,
+    alignSelf: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+  },
+});

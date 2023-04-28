@@ -11,7 +11,7 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {newMoney} from '../Redux/reducerSlice/NewMoneyInSlice';
 
-export default function NewMoneyIn() {
+export default function NewMoneyIn({navigation}) {
   const [receiptNo, setReceiptNo] = useState();
   const [moneyInDate, setMoneyInDate] = useState(null);
   const [personName, setPersonName] = useState();
@@ -54,6 +54,7 @@ export default function NewMoneyIn() {
   const handleSaveButton = () => {
     // console.log(receiptNo, moneyInDate, personName,receivedAmount)
     dispatch(newMoney({receiptNo, moneyInDate, personName, receivedAmount}));
+    navigation.navigate('Dashboard');
   };
   return (
     <SafeAreaView style={{}}>
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
   textInput: {
     backgroundColor: 'white',
     height: 40,
+    color: 'black',
     borderColor: 'silver',
     borderWidth: 1,
     marginTop: 10,

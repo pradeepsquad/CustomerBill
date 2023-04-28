@@ -76,6 +76,7 @@ export default function Payments() {
         {/* started Date */}
         <TextInput 
             style={styles.textInput}
+            keyboardType='numbers-and-punctuation'
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
@@ -83,6 +84,7 @@ export default function Payments() {
           {/* End date */}
           <TextInput 
             style={styles.textInput}
+            keyboardType='numbers-and-punctuation'
             value={endDate}
             onChangeText={(endDate) => setEndDate(endDate)}
           />
@@ -214,6 +216,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'silver',
     width: '48%',
+    color: 'black',
     marginLeft: 6,
     borderWidth: 1,
     marginTop: 10,

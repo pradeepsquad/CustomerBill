@@ -13,8 +13,9 @@ import Icons from 'react-native-vector-icons/Ionicons';
 
 export default function SaleListScreen({navigation}) {
   const [selectedDays, setSelectedDays] = useState(0);
-  const [startDate, setStartDate] = useState(null);
+  const [startDate, setStartDate] = useState('09/10/2020');
   const [endDate, setEndDate] = useState(null);
+  
 
   useEffect(() => {
     let today = new Date();
@@ -26,7 +27,7 @@ export default function SaleListScreen({navigation}) {
 
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView styles={{flex: 1}}>
       
         <View style={{marginHorizontal: 20}}>
         {/* Selected Days */}
@@ -57,6 +58,7 @@ export default function SaleListScreen({navigation}) {
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
+          
           {/* End date */}
           <TextInput 
             style={styles.textInput}
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'silver',
     width: '48%',
+    color: 'black',
     marginLeft: 6,
     borderWidth: 1,
     marginTop: 10,

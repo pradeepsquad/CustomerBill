@@ -51,6 +51,7 @@ export default function EstimateList({navigation}) {
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
+
           {/* End date */}
           <TextInput 
             style={styles.textInput}
@@ -58,6 +59,7 @@ export default function EstimateList({navigation}) {
             onChangeText={(endDate) => setEndDate(endDate)}
           />
           </View>
+          
           {/* Amount and Count */}
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <View style={styles.AmountView}>
@@ -129,6 +131,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'silver',
     width: '48%',
+    color: 'black',
     marginLeft: 6,
     borderWidth: 1,
     marginTop: 10,

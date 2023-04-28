@@ -29,7 +29,7 @@ export default function ReportScreen({navigation}) {
   }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
-      {/* Modal */}
+      {/* Modal ----------------------------------------------- */}
       <View>
         <Modal
           animationType="none"
@@ -65,6 +65,7 @@ export default function ReportScreen({navigation}) {
                 }}
                 dropdownIconPosition={'right'}
               />
+              
               <View style={{flexDirection: 'row'}}>
                 {/* started Date */}
                 <TextInput
@@ -72,6 +73,7 @@ export default function ReportScreen({navigation}) {
                   value={startDate}
                   onChangeText={startDate => setStartDate(startDate)}
                 />
+
                 {/* End date */}
                 <TextInput
                   style={styles.textInput}
@@ -79,20 +81,16 @@ export default function ReportScreen({navigation}) {
                   onChangeText={endDate => setEndDate(endDate)}
                 />
               </View>
+
               {/* Submit and cancel button */}
               <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: 10,
-                  justifyContent: 'space-between',
-                  marginHorizontal: 10,
-                }}>
+                style={styles.submitView}>
                 <TouchableOpacity
                   style={styles.cancelButton}
                   onPress={() => setModalVisible(!modalVisible)}>
                   <Text style={styles.cancelButtonText}>CANCEL</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.submitButton}>
+                <TouchableOpacity style={styles.submitButton} onPress={() => alert('Report Genrate')}>
                   <Text style={styles.submitButtonText}>SUBMIT</Text>
                 </TouchableOpacity>
               </View>
@@ -123,6 +121,7 @@ export default function ReportScreen({navigation}) {
             <Text style={styles.textColor}>GSTR - 3b </Text>
           </TouchableOpacity>
         </View>
+
         {/* TRANSACTION REPORTS */}
         <View style={{marginHorizontal: 20, marginTop: 15}}>
           <Text style={styles.headingText}>TRANSACTION REPORTS</Text>
@@ -197,6 +196,7 @@ export default function ReportScreen({navigation}) {
             <Text style={styles.textColor}>Expense Category Wise Report </Text>
           </TouchableOpacity>
         </View>
+
         {/* PARTY REPORTS */}
         <View style={{marginHorizontal: 20, marginTop: 15}}>
           <Text style={styles.headingText}>PARTY REPORTS</Text>
@@ -227,6 +227,7 @@ export default function ReportScreen({navigation}) {
             <Text style={styles.textColor}>Party Details Report </Text>
           </TouchableOpacity>
         </View>
+
         {/* ITEM/STOCK REPORTS */}
         <View style={{marginHorizontal: 20, marginTop: 15}}>
           <Text style={styles.headingText}>ITEM/STOCK REPORTS</Text>
@@ -365,8 +366,14 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: '#c3e6fc',
-    marginHorizontal: 20,
+    marginHorizontal: 5,
     height: 200,
     marginTop: 280,
+  },
+  submitView: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
   },
 });

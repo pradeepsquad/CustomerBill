@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity, View , SafeAreaView, ScrollView, TextInput, Text} from 'react-native'
 import React, {useState} from 'react'
 
-export default function NewItemCategory() {
+export default function NewItemCategory({navigation}) {
         const [categoryName, setCategoryName] = useState('');
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -11,12 +11,13 @@ export default function NewItemCategory() {
                 style={styles.textInput}
                 placeholder='Category Name'
                 keyboardType='email-address'
+                placeholderTextColor='black'
                 value={categoryName}
                 onChangeText={(categoryName) => setCategoryName(categoryName)}
             />    
         </View>
       </ScrollView>
-        <TouchableOpacity style={styles.newButton}>
+        <TouchableOpacity style={styles.newButton} onPress={() => navigation.navigate('Inventory')}>
                 <Text style={styles.buttonText}>SAVE</Text>
         </TouchableOpacity>
     </SafeAreaView>

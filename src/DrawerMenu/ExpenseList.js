@@ -7,7 +7,7 @@ export default function ExpenseList({navigation}) {
   const [selectedDays, setSelectedDays] = useState(0);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
+  
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
 
   useEffect(() => {
@@ -50,6 +50,7 @@ export default function ExpenseList({navigation}) {
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
+          
           {/* End date */}
           <TextInput 
             style={styles.textInput}
@@ -57,6 +58,7 @@ export default function ExpenseList({navigation}) {
             onChangeText={(endDate) => setEndDate(endDate)}
           />
           </View>
+
           {/* Amount and Count */}
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <View style={styles.AmountView}>
@@ -129,6 +131,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'silver',
     width: '48%',
+    color: 'black',
     marginLeft: 6,
     borderWidth: 1,
     marginTop: 10,

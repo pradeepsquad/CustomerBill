@@ -12,7 +12,6 @@ const Tab = createBottomTabNavigator();
 export default function TabMenus() {
   return (
     <Tab.Navigator
-      initialRouteName="Dashboard"
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color}) => {
           let iconName;
