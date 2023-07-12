@@ -91,7 +91,7 @@ export default function NewPartyScreen({navigation}) {
       dispatch(newCustomer({customerName, phoneNumber, billingAddress, gstNumber, selectBillingState, billingPinCode,
         deliveryAddress, selectDeliveryState, deliveryPinCode, openingBalance, selectBalanceType, selectBillingTerm
       }))
-      navigation.navigate('Party');
+      navigation.navigate('Select Party');
   }
 
   // Handle Supplier
@@ -99,7 +99,7 @@ export default function NewPartyScreen({navigation}) {
     dispatch(newSupplier({supplierName, phoneNumber, billingAddress, gstNumber, selectBillingState, billingPinCode,
       deliveryAddress, selectDeliveryState, deliveryPinCode, openingBalance, selectBalanceType, selectBillingTerm
     }))
-    navigation.navigate('Party');
+    navigation.navigate('Select Party');
   }
   return (
     <SafeAreaView style={{flex: 1}}>

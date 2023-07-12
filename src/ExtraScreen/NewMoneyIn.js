@@ -13,20 +13,20 @@ import {newMoney} from '../Redux/reducerSlice/NewMoneyInSlice';
 
 export default function NewMoneyIn({navigation}) {
   const [receiptNo, setReceiptNo] = useState();
-  const [moneyInDate, setMoneyInDate] = useState(null);
   const [personName, setPersonName] = useState();
   const [receivedAmount, setReceivedAmount] = useState();
   const [defaultCash, setDefaultCash] = useState(true);
   const [defaultUpi, setDefaultUpi] = useState(false);
   const [defaultCheque, setDefaultCheque] = useState(false);
-
   const dispatch = useDispatch();
 
+  const currentDate = new Date();
+  const moneyInDate = currentDate.toLocaleDateString();
+ 
   useEffect(() => {
     let today = new Date();
     let date =
       today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setMoneyInDate(date);
     let recId = 'REC_' + new Date().getTime();
     setReceiptNo(recId);
   }, []);
@@ -95,6 +95,7 @@ export default function NewMoneyIn({navigation}) {
         </View>
         <View
           style={{flexDirection: 'row', marginTop: 15, marginHorizontal: 20}}>
+
           {/* Upi Payment */}
           <TouchableOpacity
             style={defaultUpi ? styles.buttonSelect : styles.buttonStyle}
@@ -103,6 +104,7 @@ export default function NewMoneyIn({navigation}) {
               Upi/Bank/Pos
             </Text>
           </TouchableOpacity>
+
           {/* Cash Payment */}
           <TouchableOpacity
             style={defaultCash ? styles.buttonSelect : styles.buttonStyle}
@@ -111,6 +113,7 @@ export default function NewMoneyIn({navigation}) {
               Cash
             </Text>
           </TouchableOpacity>
+          
           {/* Cheque Payment */}
           <TouchableOpacity
             style={defaultCheque ? styles.buttonSelect : styles.buttonStyle}

@@ -5,18 +5,14 @@ import Icons from 'react-native-vector-icons/Ionicons';
 
 export default function PurchaseList({navigation}) {
   const [selectedDays, setSelectedDays] = useState(0);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  
+  const currentDate = new Date();
+  const startDate = currentDate.toLocaleDateString();
+  const endDate = currentDate.toLocaleDateString();
 
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
 
-  useEffect(() => {
-    let today = new Date();
-    let date = today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setStartDate(date);
-    setEndDate(date);
-    
-  },[]);
+  
   return (
       <SafeAreaView style={{flex: 1}}>
       <ScrollView>
@@ -46,6 +42,7 @@ export default function PurchaseList({navigation}) {
           {/* started Date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
@@ -53,6 +50,7 @@ export default function PurchaseList({navigation}) {
           {/* End date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={endDate}
             onChangeText={(endDate) => setEndDate(endDate)}
           />
@@ -61,11 +59,11 @@ export default function PurchaseList({navigation}) {
           {/* Amount and Count */}
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <View style={styles.AmountView}>
-              <Text style={{alignSelf: 'center'}}>Amount</Text>
+              <Text style={{alignSelf: 'center', color: 'silver'}}>Amount</Text>
               <Text style={{color: '#008AD0', alignSelf: 'center'}}>₹ 0</Text>
             </View>
             <View style={styles.AmountView}>
-              <Text style={{alignSelf: 'center'}}>Count</Text>
+              <Text style={{alignSelf: 'center', color: 'silver'}}>Count</Text>
               <Text style={{color: 'red', alignSelf: 'center'}}>0</Text>
             </View>
           </View>
@@ -73,7 +71,7 @@ export default function PurchaseList({navigation}) {
       </ScrollView>
 
       <TouchableOpacity style={styles.newButton} onPress={() => navigation.navigate('Select Items')}>
-        <Text style={styles.buttonText}>NEW PURCHASE</Text>
+        <Text style={styles.buttonText}>+  PURCHASE</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )

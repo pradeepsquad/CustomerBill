@@ -54,6 +54,7 @@ export default function CustomerParcel({navigation}) {
           <TextInput
             style={styles.textInput}
             placeholder="Search Party by Phone"
+            placeholderTextColor="silver"
             keyboardType='decimal-pad'
             value={searchPhone}
             onChangeText={searchPhone => setSearchPhone(searchPhone)}
@@ -64,6 +65,7 @@ export default function CustomerParcel({navigation}) {
           <TextInput
             style={styles.textInput}
             placeholder="Customer Name / Contact Person Name"
+            placeholderTextColor="silver"
             keyboardType='default'
             value={customerName}
             onChangeText={customerName => setCustomerName(customerName)}
@@ -71,6 +73,7 @@ export default function CustomerParcel({navigation}) {
           <TextInput
             style={styles.textInput}
             placeholder="Billing Address"
+            placeholderTextColor="silver"
             keyboardType='default'
             value={billingAddress}
             onChangeText={billingAddress => setBillingAddress(billingAddress)}

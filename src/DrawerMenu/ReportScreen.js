@@ -15,18 +15,14 @@ import Icons from 'react-native-vector-icons/Ionicons';
 export default function ReportScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDays, setSelectedDays] = useState(0);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  
+
+  const currentDate = new Date();
+  const startDate = currentDate.toLocaleDateString();
+  const endDate = currentDate.toLocaleDateString();
 
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
 
-  useEffect(() => {
-    let today = new Date();
-    let date =
-      today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setStartDate(date);
-    setEndDate(date);
-  }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* Modal ----------------------------------------------- */}
@@ -70,6 +66,7 @@ export default function ReportScreen({navigation}) {
                 {/* started Date */}
                 <TextInput
                   style={styles.textInput}
+                  placeholderTextColor="silver"
                   value={startDate}
                   onChangeText={startDate => setStartDate(startDate)}
                 />
@@ -77,6 +74,7 @@ export default function ReportScreen({navigation}) {
                 {/* End date */}
                 <TextInput
                   style={styles.textInput}
+                  placeholderTextColor="silver"
                   value={endDate}
                   onChangeText={endDate => setEndDate(endDate)}
                 />

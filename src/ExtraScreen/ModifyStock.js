@@ -12,6 +12,10 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 
 export default function ModifyStock() {
   const [customStyleIndex, setCustomStyleIndex] = useState(0);
+  const [addQuantity, setAddQuantity] = useState() 
+  const [addNote, setAddNote] = useState() 
+  const [reduceQuantity, setReduceQuantity] = useState() 
+  const [reduceNote, setReduceNote] = useState() 
   const handleCustomIndexSelect = index => {
     setCustomStyleIndex(index);
   };
@@ -23,7 +27,7 @@ export default function ModifyStock() {
           <Text style={styles.itemText}>Item Name : Samosa</Text>
           <Text style={styles.itemText}>Sell Price : 20.0</Text>
           <Text style={styles.itemText}>Purchase Price : 0.0</Text>
-          <Text style={styles.itemText}>Current Stock : 1.0</Text>
+          <Text style={styles.itemText}>Current Stock : {addQuantity}</Text>
         </View>
         <View style={{marginHorizontal: 20, marginTop: 20}}>
           <SegmentedControlTab
@@ -50,7 +54,9 @@ export default function ModifyStock() {
                 <TextInput
                   style={styles.inputText}
                   placeholder="Add Quantity"
-                  placeholderTextColor="black"
+                  placeholderTextColor="silver"
+                  value={addQuantity}
+                  onChangeText={(addQuantity) => setAddQuantity(addQuantity)}
                 />
                 <Text
                   style={{
@@ -63,8 +69,10 @@ export default function ModifyStock() {
                 </Text>
                 <TextInput
                   style={styles.inputText}
+                  placeholderTextColor="silver"
                   placeholder="Note"
-                  placeholderTextColor="black"
+                  value={addNote}
+                  onChangeText={(addNote) => setAddNote(addNote)}
                 />
               </View>
               <TouchableOpacity style={styles.saveButton}>
@@ -79,7 +87,9 @@ export default function ModifyStock() {
                 <TextInput
                   style={styles.inputText}
                   placeholder="Reduce Quantity"
-                  placeholderTextColor="black"
+                  placeholderTextColor="silver"
+                  value={reduceQuantity}
+                  onChangeText={(reduceQuantity) => setAddQuantity(reduceQuantity)}
                 />
                 <Text
                   style={{
@@ -94,7 +104,9 @@ export default function ModifyStock() {
                   style={styles.inputText}
                   multiline={true}
                   placeholder="Note"
-                  placeholderTextColor="black"
+                  placeholderTextColor="silver"
+                  value={reduceNote}
+                  onChangeText={(reduceNote) => setReduceNote(reduceNote)}
                 />
               </View>
               <TouchableOpacity style={styles.saveButton}>

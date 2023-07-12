@@ -6,15 +6,38 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  FlatList,
 } from 'react-native';
 import React, {useState} from 'react';
+import {useSelector} from 'react-redux';
+import {newSupplier} from '../Redux/reducerSlice/NewSupplierSlice';
+import {newCustomer} from '../Redux/reducerSlice/NewCustomerSlice';
 
 export default function SelectPartyScreen({navigation}) {
+  const showCustomer = useSelector(newCustomer);
+  const customerData = showCustomer.payload.newCustomerSlice;
+  const showSupplier = useSelector(newSupplier);
+  const supplierData = showSupplier.payload.newSupplierSlice;
+  console.log(customerData)
+  console.log(supplierData)
+
+  // RENDER LIST
+  const renderList = ({item}) => {
+    return (
+      <TouchableOpacity
+        style={styles.listView}
+        onPress={() => navigation.navigate('Select Items')}>
+        <Text style={styles.textOne}>{item.name}</Text>
+        <Text style={styles.textTwo}>{item.phone}</Text>
+        <Text style={styles.textThree}>Billing Type: {item.type}</Text>
+      </TouchableOpacity>
+    );
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView>
         <View style={{flexDirection: 'row', marginTop: 10}}>
-        {/* add New Party Button */}
+          {/* add New Party Button */}
           <TouchableOpacity
             style={styles.addPartyButton}
             onPress={() => navigation.navigate('New Party')}>
@@ -28,27 +51,17 @@ export default function SelectPartyScreen({navigation}) {
           />
         </View>
         <View style={{marginHorizontal: 20}}>
-          <TouchableOpacity style={styles.listView}>
-            <Text style={styles.textOne}>Cash Sale</Text>
-            <Text style={styles.textTwo}>Phone Number</Text>
-            <Text style={styles.textThree}>Billing Type: REGULAR</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.listView}>
-            <Text style={styles.textOne}>Demo Customer 1</Text>
-            <Text style={styles.textTwo}>2123123113</Text>
-            <Text style={styles.textThree}>Billing Type: REGULAR</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.listView}>
-            <Text style={styles.textOne}>Demo Customer 2</Text>
-            <Text style={styles.textTwo}>1234567890</Text>
-            <Text style={styles.textThree}>Billing Type: REGULAR</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.listView}>
-            <Text style={styles.textOne}>Demo Customer 3</Text>
-            <Text style={styles.textTwo}>1213213123</Text>
+          <FlatList
+            data={listData}
+            renderItem={renderList}
+            scrollEnabled={true}
+            keyExtractor={item => item.id}
+          />
+          <TouchableOpacity
+            style={styles.listView}
+            onPress={() => navigation.navigate('Select Items')}>
+            <Text style={styles.textOne}>{supplierData.supplierName}</Text>
+            <Text style={styles.textTwo}>{customerData.phoneNumber}</Text>
             <Text style={styles.textThree}>Billing Type: REGULAR</Text>
           </TouchableOpacity>
         </View>
@@ -70,12 +83,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   textTwo: {
-    // color: 'silver',
+    color: 'gray',
     fontSize: 11,
     fontWeight: '600',
   },
   textThree: {
-    // color: 'silver',
+    color: 'gray',
     fontSize: 11,
     fontWeight: '600',
   },
@@ -120,3 +133,31 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
 });
+
+const listData = [
+  {
+    name: 'Cash Sale',
+    phone: 'Phone Number',
+    type: 'REGULAR',
+  },
+  {
+    name: 'Demo Customer 1',
+    phone: '1234567890',
+    type: 'REGULAR',
+  },
+  {
+    name: 'Demo Customer 2',
+    phone: 'Phone Number',
+    type: 'REGULAR',
+  },
+  {
+    name: 'Demo Customer 3',
+    phone: 'Phone Number',
+    type: 'REGULAR',
+  },
+  {
+    name: 'Demo Customer 4',
+    phone: 'Phone Number',
+    type: 'REGULAR',
+  },
+];

@@ -6,18 +6,13 @@ import Icons from 'react-native-vector-icons/Ionicons';
 
 export default function EstimateList({navigation}) {
   const [selectedDays, setSelectedDays] = useState(0);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const currentDate = new Date();
+  const startDate = currentDate.toLocaleDateString();
+  const endDate = currentDate.toLocaleDateString();
 
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
 
-  useEffect(() => {
-    let today = new Date();
-    let date = today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setStartDate(date);
-    setEndDate(date);
-    
-  },[]);
+  
 
   return (
     <SafeAreaView styles={{flex: 1}}>
@@ -48,6 +43,7 @@ export default function EstimateList({navigation}) {
           {/* started Date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
@@ -55,6 +51,7 @@ export default function EstimateList({navigation}) {
           {/* End date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={endDate}
             onChangeText={(endDate) => setEndDate(endDate)}
           />
@@ -75,7 +72,7 @@ export default function EstimateList({navigation}) {
       </ScrollView>
 
       <TouchableOpacity style={styles.newButton} onPress={() => navigation.navigate('Select Party')}>
-        <Text style={styles.buttonText}>NEW ESTIMATE</Text>
+        <Text style={styles.buttonText}>ESTIMATE</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )
@@ -146,7 +143,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignSelf: 'flex-end',
     marginHorizontal: 20,
-    marginTop: 500,
+    position: 'absolute',
+    top: 700,
+    right: 10,
   },
   buttonText: {
     color: 'white',

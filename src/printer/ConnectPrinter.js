@@ -1,211 +1,283 @@
 import {
   ActivityIndicator,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
   Image,
-  Button,
-  ScrollView,
-  DeviceEventEmitter,
-  NativeEventEmitter,
-  Switch,
   TouchableOpacity,
-  Dimensions,
-  ToastAndroid,
   SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Platform,
   PermissionsAndroid,
+  FlatList,
+  LogBox,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-// import {
-//   BluetoothManager,
-//   BluetoothEscposPrinter,
-//   BluetoothTscPrinter,
-// } from 'react-native-bluetooth-escpos-printer';
+import {
+  BluetoothManager,
+  BluetoothEscposPrinter,
+} from 'react-native-bluetooth-escpos-printer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+LogBox.ignoreLogs(['new NativeEventEmitter']);
+LogBox.ignoreAllLogs();
 
 export default function ConnectPrinter() {
-  const [devices, setDevices] = useState(null);
-  const [pairedDs, setPairedDs] = useState([]);
-  const [foundDs, setFoundDs] = useState([]);
-  const [bleOpened, setBleOpened] = useState(false);
+  const [oldDevice, setOldDevice] = useState([]);
+  const [connectDs, setConnectDs] = useState();
+  const [newDevice, setNewDevice] = useState([]);
+  const [saveData, setSavedData] = useState();
   const [loading, setLoading] = useState(true);
-  const [boundAddress, setBoundAddress] = useState('');
-  const [debugMsg, setDebugMsg] = useState('');
-  const [connection, setConnection] = useState([''])
-  const [newDevice, setNewDevice] = useState(false);
+  const paired = [];
 
-  const listeners = [];
-
-  // useEffect(() => {
-  //   BluetoothManager.isBluetoothEnabled().then((enabled) => {
-  //     setBleOpened(enabled),
-  //     setLoading(false)
-  //   }, (err) => {
-  //     console.log(err)
-  //   })
-
-  //   // PlateFrom
-  //   // if(Platform.OS === 'android'){
-  //     let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
-  //     listeners.push(bluetoothManagerEmitter.addListener(BluetoothManager, EVENT_DEVICE_ALREADY_PAIRED,
-  //       (rsp)=> {
-  //         deviceAlreadyPaired(rsp)
-  //       }));
-
-  //       listeners.push(bluetoothManagerEmitter.addListener(BluetoothManager.EVENT_DEVICE_FOUND,
-  //         (rsp) => {
-  //           deviceFoundEvent(rsp)
-  //         }));
-
-  //         listeners.push(bluetoothManagerEmitter.addListener(BluetoothManager.EVENT_CONNECTION_LOST,
-  //           () => {
-  //             name: ''
-  //             boundAddress: ''
-  //           }))
-  //   // }
-  //   listeners.push(DeviceEventEmitter.addListener(BluetoothManager.EVENT_BLUETOOTH_NOT_SUPPORT,() => {
-  //     ToastAndroid.show("Device Not Support Bluetooth !", ToastAndroid.LONG);
-  //   }))
-  // },[]);
-
-  // already Paired Device
-  deviceAlreadyPaired = rsp => {
-    var ds = null;
-    if (typeof rsp.devices == 'object') {
-      ds = rsp.devices;
-    } else {
-      try {
-        ds = JSON.parse(rsp.devices);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    if (ds && ds.length) {
-      let pared = pairedDs;
-      pared = pared.concat(ds || []);
-      setPairedDs(pared);
-    }
-  };
-
-  // Device found Event
-  deviceFoundEvent = rsp => {
-    var r = null;
-    try {
-      if (typeof rsp.device == 'object') {
-        r = rsp.device;
-      } else {
-        r = JSON.parse(rsp.device);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-
-    //
-    if (r) {
-      let found = foundDs || [];
-      if (found.findIndex) {
-        let duplicated = found.findIndex(function (x) {
-          return (x.address = r.address);
-        });
-        if (duplicated == -1) {
-          found.push(r);
-          setFoundDs(found);
+  useEffect(() => {
+    // Android Platform Permission
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      ]).then(result => {
+        if (result) {
+          console.log('User accept');
+        } else {
+          console.log('User refuse');
         }
-      }
-    }
-  };
-
-  // Search Device
-  const searchDevice = async () => {
-    // setNewDevice(!newDevice)
-    // BluetoothManager.scanDevices().then(
-    //   s => {
-    //     var ss = s;
-    //     var found = ss.found;
-    //     try {
-    //       found = JSON.parse(found);
-    //     } catch (e) {
-    //       console.log(e);
-    //     }
-    //     var fds = foundDs;
-    //     if (found && found.length) {
-    //       fds = found;
-    //       setFoundDs(fds);
-    //     }
-    //   },
-    //   er => {
-    //     console.log('error' + JSON.stringify(er));
-    //   },
-    // );
-
-    try{
-      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,{
-        title: 'connect device bluetooth permission',
-        message: 'Access your bluetooth device'+ 'connect your devices',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
       });
+    }
 
-      if(granted === PermissionsAndroid.RESULTS.GRANTED){
-        console.log('You can use the Bluetooth');
-      }else{
-        console.log('Bluetooth permission denied');
-      }
-    }catch(err) {
-      console.log(err)
+    // Enable Bluetooth and turn ON Bluetooth if OFF
+    BluetoothManager.enableBluetooth().then(
+      r => {
+        if (r && r.length > 0) {
+          for (var i = 0; i < r.length; i++) {
+            try {
+              paired.push(JSON.parse(r[i]));
+              setOldDevice(paired);
+            } catch (e) {
+              // console.log('error=========>', e);
+              ToastAndroid.showWithGravityAndOffset(
+                e,
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+                100,
+                100,
+              );
+            }
+          }
+        }
+        // console.log('this is the device======>', JSON.stringify(oldDevice));
+      },
+      err => {
+        // alert('external error========>', err);
+        ToastAndroid.showWithGravityAndOffset(
+          err,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+      },
+    );
+  }, []);
+
+  // CONNECT PRINTER AND PRINT TEST
+  const printTest = async () => {
+    if (!connectDs == []) {
+      await BluetoothManager.connect(connectDs)
+        .then(s => {
+          ToastAndroid.showWithGravityAndOffset(
+            s,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+            100,
+            100,
+          );
+        })
+        .catch(err => {
+          console.log('connect Error', err);
+          ToastAndroid.showWithGravityAndOffset(
+            err,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+            100,
+            100,
+          );
+        });
+      await BluetoothEscposPrinter.printerInit();
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      );
+      await BluetoothEscposPrinter.printQRCode(
+        'Test Printer',
+        280,
+        BluetoothEscposPrinter.ERROR_CORRECTION.L,
+      );
+      await BluetoothEscposPrinter.printText('Test Printer', {});
+      await BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
+    } else {
+      ToastAndroid.showWithGravityAndOffset(
+        'Device is not connected please select Device first',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+        100,
+        100,
+      );
     }
   };
 
-  // Print Test
-  const printTest = async () => {
-    BluetoothEscposPrinter.selfTest(() => {});
+  useEffect(async () => {
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify(connectDs));
+      console.log('setData', JSON.stringify(connectDs));
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const savedUser = await AsyncStorage.getItem('user');
+      const currentUser = JSON.parse(savedUser);
+      setSavedData(currentUser);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+
+  // START SCAN BLUETOOTH DEVICE
+  const startScan = async () => {
+    await BluetoothManager.scanDevices().then(s => {
+      var ss = JSON.parse(s);
+      console.log('====================>', ss);
+      setNewDevice(ss);
+    }),
+      er => {
+        // console.log('<====================>', er);
+        ToastAndroid.showWithGravityAndOffset(
+          er,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+      };
   };
 
-  // previously connected Devices
-  const handlePreviousConnection = () => {
-    setConnection(!connection);
-  }
+  // RENDER PRINTER LIST
+  const renderDeviceList = ({item}) => {
+    return (
+      <TouchableOpacity
+        onPress={() => setConnectDs(item.address)}
+        style={{backgroundColor: 'silver', marginTop: 5, borderRadius: 5}}>
+        <View style={styles.listView}>
+          <Image
+            source={require('../assets/bluetooth.png')}
+            style={styles.image}
+          />
+          <Text style={styles.listItem}>{item.name || 'UNKNOWN'}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  // REMOVE DEVICE FROM SAVE LIST
+  const handleRemoveItem = async () => {
+    try {
+      await AsyncStorage.removeItem('user');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={{marginHorizontal: 20, marginTop: 30}}>
-      <View style={{flexDirection: 'row'}}>
-      <Text style={styles.connectText}>Connected devices</Text>
-      <Switch 
-        style={{marginLeft: 80}}
-      />
-      </View>
-        
-
-        {/* pair new Devices */}
-        <TouchableOpacity style={styles.newPair} onPress={() => searchDevice()}>
-          <Text style={styles.plusText}>+</Text>
-          <Text style={styles.pairText}>Pair new devices</Text>
-        </TouchableOpacity>
-
-        {/* searching Device List */}
-        {/* {!newDevice ? null : <View>
-          <ActivityIndicator size='large'/>
-        </View>} */}
-
-        <Text style={styles.preText}>Previously connected devices</Text>
-        <View style={{marginTop: 20}}>
-        <TouchableOpacity style={styles.listView} >
-          <Image source={require('../assets/pack.jpeg')} style={styles.image}/>
-          <Text style={styles.nameText}>Recept printer</Text>
-          {!connection ? <Text style={styles.connect}>Connected</Text>:
-          <Text style={styles.connect}>Not Connected</Text>}
-        </TouchableOpacity>
+      <View style={{marginHorizontal: 20, marginTop: 20}}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.connectText}>Connected devices</Text>
         </View>
 
-        {/* self Test Button */}
-        <TouchableOpacity
-          style={styles.touchButton}
-          onPress={() => printTest()}>
-          <Text style={styles.touchText}>Self Test</Text>
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>
+          <View>
+            <Text style={{color: 'black', fontSize: 17}}>
+              connected Device: {connectDs}
+            </Text>
+            <Text style={{color: 'black', fontSize: 17}}>
+              Saved Device: {saveData}
+            </Text>
+          </View>
+
+          {/* REMOVE SAVED DEVICE BUTTON */}
+          <TouchableOpacity
+            onPress={() => handleRemoveItem()}
+            style={styles.removeButton}>
+            <Text style={styles.removeText}>CLEAN</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Show perviously connected Device which is already paired in mobile bluetooth List */}
+        <Text style={styles.preText}>
+          Previously connected and Paired devices
+        </Text>
+        <View style={{height: 160, backgroundColor: 'silver', marginTop: 10}}>
+          {oldDevice.length === 0 ? (
+            <ActivityIndicator
+              size="large"
+              color="#008AD0"
+              style={{marginTop: 60}}
+            />
+          ) : (
+            <FlatList
+              data={oldDevice}
+              scrollEnabled={true}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderDeviceList}
+              keyExtractor={item => item.id}
+            />
+          )}
+        </View>
+
+        {/* SEARCH NEW DEVICES */}
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={styles.newPair}
+            onPress={() => [startScan(), setLoading(!loading)]}>
+            <Text style={styles.plusText}>+</Text>
+            <Text style={styles.pairText}>Pair new devices</Text>
+          </TouchableOpacity>
+          {loading ? null : (
+            <ActivityIndicator
+              size="small"
+              color="#008AD0"
+              style={{marginLeft: 20, marginTop: 5}}
+            />
+          )}
+        </View>
+        <View style={{height: 400, backgroundColor: 'silver'}}>
+          {newDevice.length === 0 ? (
+            <Text
+              style={{
+                color: 'black',
+                marginTop: 200,
+                alignSelf: 'center',
+                fontWeight: 'bold',
+                fontSize: 20,
+              }}>
+              No Device available
+            </Text>
+          ) : (
+            <FlatList
+              data={newDevice.found}
+              scrollEnabled={true}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderDeviceList}
+              keyExtractor={item => item.id}
+            />
+          )}
+        </View>
       </View>
+      {/* PRINTER TEST PRINT */}
+      <TouchableOpacity style={styles.touchButton} onPress={() => printTest()}>
+        <Text style={styles.touchText}>TEST PRINTER</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -219,8 +291,11 @@ const styles = StyleSheet.create({
   touchButton: {
     backgroundColor: 'green',
     height: 45,
+    width: '90%',
     borderRadius: 5,
-    marginTop: 450,
+    position: 'absolute',
+    bottom: 15,
+    alignSelf: 'center',
   },
   touchText: {
     color: 'white',
@@ -231,8 +306,8 @@ const styles = StyleSheet.create({
   },
   newPair: {
     flexDirection: 'row',
-    marginTop: 25,
-    marginBottom: 20,
+    marginTop: 5,
+    marginBottom: 5,
   },
   plusText: {
     fontSize: 30,
@@ -248,431 +323,37 @@ const styles = StyleSheet.create({
   preText: {
     color: '#008AD0',
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 15,
+  },
+  image: {
+    height: 35,
+    width: 35,
+    borderRadius: 45 / 2,
   },
   listView: {
     flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    marginHorizontal: 20,
+  },
+  listItem: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'black',
+    paddingLeft: 20,
+  },
+  removeButton: {
     backgroundColor: 'green',
+    height: 40,
+    width: 80,
     borderRadius: 5,
-    marginTop: 10,
+    position: 'absolute',
+    right: 20,
   },
-  image: {
-    height: 45,
-    width: 45,
-    borderRadius: 45/2,
-  },
-  nameText: {
+  removeText: {
     color: 'white',
     fontWeight: 'bold',
-    margin: 13,
+    textAlign: 'center',
+    marginTop: 10,
   },
-  connect: {
-    color:'black',
-    marginTop: 12,
-    marginLeft: 90,
-    fontWeight: 'bold',
-  }
 });
-
-// import React, {Component} from 'react';
-// import {
-//   ActivityIndicator,
-//   Platform,
-//   StyleSheet,
-//   Text,
-//   View,
-//   Button,
-//   ScrollView,
-//   DeviceEventEmitter,
-//   NativeEventEmitter,
-//   Switch,
-//   TouchableOpacity,
-//   Dimensions,
-//   ToastAndroid,
-// } from 'react-native';
-// import {
-//   BluetoothEscposPrinter,
-//   BluetoothManager,
-//   BluetoothTscPrinter,
-// } from 'react-native-bluetooth-escpos-printer';
-
-// var {height, width} = Dimensions.get('window');
-// export default class ConnectPrinter extends Component {
-//   _listeners = [];
-
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       devices: null,
-//       pairedDs: [],
-//       foundDs: [],
-//       bleOpend: false,
-//       loading: true,
-//       boundAddress: '',
-//       debugMsg: '',
-//     };
-//   }
-
-//   componentDidMount() {
-//     //alert(BluetoothManager)
-//     BluetoothManager.isBluetoothEnabled().then(
-//       enabled => {
-//         this.setState({
-//           bleOpend: Boolean(enabled),
-//           loading: false,
-//         });
-//       },
-//       err => {
-//         err;
-//       },
-//     );
-
-//     if (Platform.OS === 'ios') {
-//       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
-//       this._listeners.push(
-//         bluetoothManagerEmitter.addListener(
-//           BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-//           rsp => {
-//             this._deviceAlreadPaired(rsp);
-//           },
-//         ),
-//       );
-//       this._listeners.push(
-//         bluetoothManagerEmitter.addListener(
-//           BluetoothManager.EVENT_DEVICE_FOUND,
-//           rsp => {
-//             this._deviceFoundEvent(rsp);
-//           },
-//         ),
-//       );
-//       this._listeners.push(
-//         bluetoothManagerEmitter.addListener(
-//           BluetoothManager.EVENT_CONNECTION_LOST,
-//           () => {
-//             this.setState({
-//               name: '',
-//               boundAddress: '',
-//             });
-//           },
-//         ),
-//       );
-//     } else if (Platform.OS === 'android') {
-//       this._listeners.push(
-//         DeviceEventEmitter.addListener(
-//           BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-//           rsp => {
-//             this._deviceAlreadPaired(rsp);
-//           },
-//         ),
-//       );
-//       this._listeners.push(
-//         DeviceEventEmitter.addListener(
-//           BluetoothManager.EVENT_DEVICE_FOUND,
-//           rsp => {
-//             this._deviceFoundEvent(rsp);
-//           },
-//         ),
-//       );
-//       this._listeners.push(
-//         DeviceEventEmitter.addListener(
-//           BluetoothManager.EVENT_CONNECTION_LOST,
-//           () => {
-//             this.setState({
-//               name: '',
-//               boundAddress: '',
-//             });
-//           },
-//         ),
-//       );
-//       this._listeners.push(
-//         DeviceEventEmitter.addListener(
-//           BluetoothManager.EVENT_BLUETOOTH_NOT_SUPPORT,
-//           () => {
-//             ToastAndroid.show(
-//               'Device Not Support Bluetooth !',
-//               ToastAndroid.LONG,
-//             );
-//           },
-//         ),
-//       );
-//     }
-//   }
-
-//   componentWillUnmount() {
-//     //for (let ls in this._listeners) {
-//     //    this._listeners[ls].remove();
-//     //}
-//   }
-
-//   _deviceAlreadPaired(rsp) {
-//     var ds = null;
-//     if (typeof rsp.devices == 'object') {
-//       ds = rsp.devices;
-//     } else {
-//       try {
-//         ds = JSON.parse(rsp.devices);
-//       } catch (e) {}
-//     }
-//     if (ds && ds.length) {
-//       let pared = this.state.pairedDs;
-//       pared = pared.concat(ds || []);
-//       this.setState({
-//         pairedDs: pared,
-//       });
-//     }
-//   }
-
-//   _deviceFoundEvent(rsp) {
-//     //alert(JSON.stringify(rsp))
-//     var r = null;
-//     try {
-//       if (typeof rsp.device == 'object') {
-//         r = rsp.device;
-//       } else {
-//         r = JSON.parse(rsp.device);
-//       }
-//     } catch (e) {
-//       //alert(e.message);
-//       //ignore
-//     }
-//     //alert('f')
-//     if (r) {
-//       let found = this.state.foundDs || [];
-//       if (found.findIndex) {
-//         let duplicated = found.findIndex(function (x) {
-//           return x.address == r.address;
-//         });
-//         //CHECK DEPLICATED HERE...
-//         if (duplicated == -1) {
-//           found.push(r);
-//           this.setState({
-//             foundDs: found,
-//           });
-//         }
-//       }
-//     }
-//   }
-
-//   _renderRow(rows) {
-//     let items = [];
-//     for (let i in rows) {
-//       let row = rows[i];
-//       if (row.address) {
-//         items.push(
-//           <TouchableOpacity
-//             key={new Date().getTime() + i}
-//             style={styles.wtf}
-//             onPress={() => {
-//               this.setState({
-//                 loading: true,
-//               });
-//               BluetoothManager.connect(row.address).then(
-//                 s => {
-//                   this.setState({
-//                     loading: false,
-//                     boundAddress: row.address,
-//                     name: row.name || 'UNKNOWN',
-//                   });
-//                 },
-//                 e => {
-//                   this.setState({
-//                     loading: false,
-//                   });
-//                   alert(e);
-//                 },
-//               );
-//             }}>
-//             <Text style={styles.name}>{row.name || 'UNKNOWN'}</Text>
-//             <Text style={styles.address}>{row.address}</Text>
-//           </TouchableOpacity>,
-//         );
-//       }
-//     }
-//     return items;
-//   }
-
-//   render() {
-//     return (
-//       <ScrollView style={styles.container}>
-//         <Text>{this.state.debugMsg}</Text>
-//         <Text style={styles.title}>
-//           Blutooth Opended:{this.state.bleOpend ? 'true' : 'false'}{' '}
-//           <Text>Open BLE Before Scanning</Text>{' '}
-//         </Text>
-//         <View>
-//           <Switch
-//             value={this.state.bleOpend}
-//             onValueChange={v => {
-//               this.setState({
-//                 loading: true,
-//               });
-//               if (!v) {
-//                 BluetoothManager.disableBluetooth().then(
-//                   () => {
-//                     this.setState({
-//                       bleOpend: false,
-//                       loading: false,
-//                       foundDs: [],
-//                       pairedDs: [],
-//                     });
-//                   },
-//                   err => {
-//                     alert(err);
-//                   },
-//                 );
-//               } else {
-//                 BluetoothManager.enableBluetooth().then(
-//                   r => {
-//                     var paired = [];
-//                     if (r && r.length > 0) {
-//                       for (var i = 0; i < r.length; i++) {
-//                         try {
-//                           paired.push(JSON.parse(r[i]));
-//                         } catch (e) {
-//                           //ignore
-//                         }
-//                       }
-//                     }
-//                     this.setState({
-//                       bleOpend: true,
-//                       loading: false,
-//                       pairedDs: paired,
-//                     });
-//                   },
-//                   err => {
-//                     this.setState({
-//                       loading: false,
-//                     });
-//                     alert(err);
-//                   },
-//                 );
-//               }
-//             }}
-//           />
-//           <Button
-//             disabled={this.state.loading || !this.state.bleOpend}
-//             onPress={() => {
-//               this._scan();
-//             }}
-//             title="Scan"
-//           />
-//         </View>
-//         <Text style={styles.title}>
-//           Connected:
-//           <Text style={{color: 'blue'}}>
-//             {!this.state.name ? 'No Devices' : this.state.name}
-//           </Text>
-//         </Text>
-//         <Text style={styles.title}>Found(tap to connect):</Text>
-//         {this.state.loading ? <ActivityIndicator animating={true} /> : null}
-//         <View style={{flex: 1, flexDirection: 'column'}}>
-//           {this._renderRow(this.state.foundDs)}
-//         </View>
-//         <Text style={styles.title}>Paired:</Text>
-//         {this.state.loading ? <ActivityIndicator animating={true} /> : null}
-//         <View style={{flex: 1, flexDirection: 'column'}}>
-//           {this._renderRow(this.state.pairedDs)}
-//         </View>
-
-//         {/* <View style={{flexDirection:"row",justifyContent:"space-around",paddingVertical:30}}>
-//                 <Button disabled={this.state.loading || !(this.state.bleOpend && this.state.boundAddress.length > 0 )}
-//                         title="ESC/POS" onPress={()=>{
-//                     this.props.navigator.push({
-//                         component:EscPos,
-//                         passProps:{
-//                             name:this.state.name,
-//                             boundAddress:this.state.boundAddress
-//                         }
-//                     })
-//                 }}/>
-//                 <Button disabled={this.state.loading|| !(this.state.bleOpend && this.state.boundAddress.length > 0) }
-//                         title="TSC" onPress={()=>{
-//                    this.props.navigator.push({
-//                        component:Tsc,
-//                        passProps:{
-//                            name:this.state.name,
-//                            boundAddress:this.state.boundAddress
-//                        }
-//                    })
-//                 }
-//                 }/>
-//                 </View> */}
-//       </ScrollView>
-//     );
-//   }
-
-//   // _selfTest() {
-//   //     this.setState({
-//   //         loading: true
-//   //     }, ()=> {
-//   //         BluetoothEscposPrinter.selfTest(()=> {
-//   //         });
-
-//   //         this.setState({
-//   //             loading: false
-//   //         })
-//   //     })
-//   // }
-
-//   _scan() {
-//     this.setState({
-//       loading: true,
-//     });
-//     BluetoothManager.scanDevices().then(
-//       s => {
-//         var ss = s;
-//         var found = ss.found;
-//         try {
-//           found = JSON.parse(found); //@FIX_it: the parse action too weired..
-//         } catch (e) {
-//           //ignore
-//         }
-//         var fds = this.state.foundDs;
-//         if (found && found.length) {
-//           fds = found;
-//         }
-//         this.setState({
-//           foundDs: fds,
-//           loading: false,
-//         });
-//       },
-//       er => {
-//         this.setState({
-//           loading: false,
-//         });
-//         console.log('error' + JSON.stringify(er));
-//         alert('error' + JSON.stringify(er));
-//       },
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#F5FCFF',
-//   },
-
-//   title: {
-//     width: width,
-//     backgroundColor: '#eee',
-//     color: '#232323',
-//     paddingLeft: 8,
-//     paddingVertical: 4,
-//     textAlign: 'left',
-//   },
-//   wtf: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//   },
-//   name: {
-//     flex: 1,
-//     textAlign: 'left',
-//   },
-//   address: {
-//     flex: 1,
-//     textAlign: 'right',
-//   },
-// });

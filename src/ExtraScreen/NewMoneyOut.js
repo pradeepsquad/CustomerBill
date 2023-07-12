@@ -13,22 +13,20 @@ import {newMoneyOut} from '../Redux/reducerSlice/NewMoneyOutSlice';
 
 export default function NewMoneyOut({navigation}) {
   const [receiptNo, setReceiptNo] = useState();
-  const [moneyInDate, setMoneyInDate] = useState(null);
   const [personName, setPersonName] = useState();
   const [amountPaid, setAmountPaid] = useState();
   const [defaultCash, setDefaultCash] = useState(true);
   const [defaultUpi, setDefaultUpi] = useState(false);
   const [defaultCheque, setDefaultCheque] = useState(false);
-
- 
-
   const dispatch = useDispatch();
+  
+  const currentDate = new Date();
+  const moneyInDate = currentDate.toLocaleDateString();
+  
 
   useEffect(() => {
     let today = new Date();
-    let date =
       today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setMoneyInDate(date);
     let recId = 'REC_' + new Date().getTime();
     setReceiptNo(recId);
   }, []);
@@ -82,7 +80,7 @@ export default function NewMoneyOut({navigation}) {
           <TextInput
             style={styles.textInput}
             placeholder="Customer Name/Contact Person Name"
-            placeholderTextColor="black"
+            placeholderTextColor="silver"
             value={personName}
             onChangeText={personName => setPersonName(personName)}
           />
@@ -90,7 +88,7 @@ export default function NewMoneyOut({navigation}) {
           <TextInput
             style={styles.textInput}
             placeholder="Amount Paid"
-            placeholderTextColor="black"
+            placeholderTextColor="silver"
             value={amountPaid}
             onChangeText={amountPaid => setAmountPaid(amountPaid)}
           />

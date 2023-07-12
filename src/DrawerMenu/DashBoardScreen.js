@@ -7,14 +7,17 @@ import {
   ScrollView,
   Switch,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
+import {color} from 'react-native-reanimated';
 
 export default function DashBoardScreen({navigation}) {
   const [switchValue, setSwitchValue] = useState(false);
   const [filePath, setFilePath] = useState({});
+  const [saveData, setSavedData] = useState();
 
   // Handle Upload Image
   const handleUploadImage = type => {
@@ -59,232 +62,295 @@ export default function DashBoardScreen({navigation}) {
   // Handle Show Print
   const handleShowPrint = () => {
     alert('kk');
-  }
+  };
 
+  // GET DEVICE ADDRESS
+  useEffect(async () => {
+    try {
+      const savedUser = await AsyncStorage.getItem('user');
+      const currentUser = JSON.parse(savedUser);
+      setSavedData(currentUser);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
-      
-        <View style={{marginHorizontal: 20, marginTop: 15}}>
-          <View style={{flexDirection: 'row'}}>
-            {/* Upload Image */}
-            <TouchableOpacity
-              style={styles.imageButton}
-              onPress={() => handleUploadImage('photo')}>
-              <Text style={styles.imageText}> ADD LUCKY IMAGE </Text>
-            </TouchableOpacity>
-            <Text
-              style={{
-                marginTop: 7,
-                fontWeight: '600',
-                marginLeft: 100,
-                color: 'black',
-              }}>
-              {switchValue ? 'Privacy ON' : 'Privacy OFF'}
-            </Text>
-            <Switch value={switchValue} onValueChange={switchButton} />
-          </View>
-
-          {/*  First List */}
-          {switchValue ? null : (
-            <View style={{marginTop: 10}}>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                <TouchableOpacity
-                  style={styles.saleButton}
-                  onPress={() => navigation.navigate('Sale List')}>
-                  <Icon
-                    name="bar-chart"
-                    size={30}
-                    color="#E8A317"
-                    style={styles.imageStyle}
-                  />
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>Sale (Today)</Text>
-                    <Text style={styles.currencyColor}>₹ 0</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.saleButton}
-                  onPress={() => navigation.navigate('Money In List')}>
-                  <Text style={styles.currencyText}>₹</Text>
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>MoneyIn (Today)</Text>
-                    <Text style={styles.currencyColor}>₹ 0</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.saleButton}>
-                  <Text style={styles.currencyText}>₹</Text>
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>
-                      MoneyIn | Bank (Today)
-                    </Text>
-                    <Text style={styles.currencyColor}>₹ 0</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.saleButton}>
-                  <Text style={styles.currencyText}>₹</Text>
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>
-                      MoneyIn | Cash (Today)
-                    </Text>
-                    <Text style={styles.currencyColor}>₹ 0</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.saleButton}>
-                  <Text style={styles.currencyText}>₹</Text>
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>
-                      MoneyIn | Cheque (Today)
-                    </Text>
-                    <Text style={styles.currencyColor}>₹ 0</Text>
-                  </View>
-                </TouchableOpacity>
-              </ScrollView>
-            </View>
-          )}
-          
-          {/*  Second List */}
-          {switchValue ? null : (
-            <View style={{marginTop: 3}}>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                <TouchableOpacity
-                  style={styles.saleButton}
-                  onPress={() => navigation.navigate('Reports')}>
-                  <Icon
-                    name="bar-chart"
-                    size={30}
-                    color="#E8A317"
-                    style={styles.imageStyle}
-                  />
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>Reports</Text>
-                    <Text style={styles.reportColor}>Check Reports</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.saleButton}
-                  onPress={() => navigation.navigate('Reports')}>
-                  <Text style={styles.currencyText}>₹</Text>
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>Receivable</Text>
-                    <Text style={styles.reportColor}>Check Reports</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.saleButton}
-                  onPress={() => navigation.navigate('Reports')}>
-                  <Text style={styles.currencyText}>₹</Text>
-                  <View style={styles.textViewStyle}>
-                    <Text style={styles.saleButtonText}>Payable</Text>
-                    <Text style={styles.reportColor}>Check Reports</Text>
-                  </View>
-                </TouchableOpacity>
-              </ScrollView>
-            </View>
-          )}
-          <Text style={styles.transaction}>RECENT TRANSACTION</Text>
-
-          {/* Show Recent Transaction */}
-          <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{marginBottom: '100%'}}>
-            <TouchableOpacity style={styles.transactionView} onPress={() => handleShowPrint()}>
-            <View style={{flexDirection: 'row'}}>
-            <Text style={{color: 'black', marginLeft: 10, marginTop: 5}}>Cash Sale</Text>
-            <Text style={{color: 'black', marginLeft: 190, marginTop: 5}}>2 | 06/03/2023</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-            <Text style={{color: '#008AD0', marginLeft: 10}}>Sale: $20.0</Text>
-            <Text style={{color: 'green', marginLeft: 180}}>MoneyIn: 20.0</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignSelf: 'center', marginTop: 4}}>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>UPI/BANK</Text>
-                </View>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>CASH</Text>
-                </View>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>CHEQUE</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.transactionView} onPress={() => handleShowPrint()}>
-            <View style={{flexDirection: 'row'}}>
-            <Text style={{color: 'black', marginLeft: 10, marginTop: 5}}>Cash Sale</Text>
-            <Text style={{color: 'black', marginLeft: 190, marginTop: 5}}>2 | 06/03/2023</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-            <Text style={{color: '#008AD0', marginLeft: 10}}>Sale: $20.0</Text>
-            <Text style={{color: 'green', marginLeft: 180}}>MoneyIn: 20.0</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignSelf: 'center', marginTop: 4}}>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>UPI/BANK</Text>
-                </View>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>CASH</Text>
-                </View>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>CHEQUE</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.transactionView} onPress={() => handleShowPrint()}>
-            <View style={{flexDirection: 'row'}}>
-            <Text style={{color: 'black', marginLeft: 10, marginTop: 5}}>Cash Sale</Text>
-            <Text style={{color: 'black', marginLeft: 190, marginTop: 5}}>2 | 06/03/2023</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-            <Text style={{color: '#008AD0', marginLeft: 10}}>Sale: $250.0</Text>
-            <Text style={{color: 'green', marginLeft: 180}}>MoneyIn: 250.0</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignSelf: 'center', marginTop: 4}}>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>UPI/BANK</Text>
-                </View>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>CASH</Text>
-                </View>
-                <View style={styles.paymentStyle}>
-                   <Text style={styles.paymentText}>CHEQUE</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-            </View>
-            </ScrollView>
+      <View style={{marginHorizontal: 20, marginTop: 15}}>
+        <View style={{flexDirection: 'row'}}>
+          {/* Upload Image */}
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => handleUploadImage('photo')}>
+            <Text style={styles.imageText}> ADD LUCKY IMAGE </Text>
+          </TouchableOpacity>
+          <Text
+            style={{
+              marginTop: 7,
+              fontWeight: '600',
+              marginLeft: 100,
+              color: 'black',
+            }}>
+            {switchValue ? 'Privacy ON' : 'Privacy OFF'}
+          </Text>
+          <Switch value={switchValue} onValueChange={switchButton} />
         </View>
-     
-      <View style={{position: 'absolute', alignSelf: 'center', marginTop: '145%', marginBottom: 20}}>
-      <TouchableOpacity
-        style={styles.printerButton}
-        onPress={() => navigation.navigate('Connect Printer')}>
-        <Text
-          style={styles.printerText}>
-          {' '}
-          CONNECT TO PRINTER{' '}
-        </Text>
-        <Text style={styles.permissionText}>
-          {' '}
-          PERMISSION | BLUETOOTH | LOCATION{' '}
-        </Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.billButton}
-        onPress={() => navigation.navigate('Select Items')}>
-        <Text style={styles.billText}> + BILL/INVOICE</Text>
-      </TouchableOpacity>
+        {/*  First List */}
+        {switchValue ? null : (
+          <View style={{marginTop: 10}}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity
+                style={styles.saleButton}
+                onPress={() => navigation.navigate('Sale List')}>
+                <Icon
+                  name="bar-chart"
+                  size={30}
+                  color="#E8A317"
+                  style={styles.imageStyle}
+                />
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>Sale (Today)</Text>
+                  <Text style={styles.currencyColor}>₹ 0</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.saleButton}
+                onPress={() => navigation.navigate('Money In List')}>
+                <Text style={styles.currencyText}>₹</Text>
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>MoneyIn (Today)</Text>
+                  <Text style={styles.currencyColor}>₹ 0</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.saleButton}>
+                <Text style={styles.currencyText}>₹</Text>
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>
+                    MoneyIn | Bank (Today)
+                  </Text>
+                  <Text style={styles.currencyColor}>₹ 0</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.saleButton}>
+                <Text style={styles.currencyText}>₹</Text>
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>
+                    MoneyIn | Cash (Today)
+                  </Text>
+                  <Text style={styles.currencyColor}>₹ 0</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.saleButton}>
+                <Text style={styles.currencyText}>₹</Text>
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>
+                    MoneyIn | Cheque (Today)
+                  </Text>
+                  <Text style={styles.currencyColor}>₹ 0</Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        )}
+
+        {/*  Second List */}
+        {switchValue ? null : (
+          <View style={{marginTop: 3}}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity
+                style={styles.saleButton}
+                onPress={() => navigation.navigate('Reports')}>
+                <Icon
+                  name="bar-chart"
+                  size={30}
+                  color="#E8A317"
+                  style={styles.imageStyle}
+                />
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>Reports</Text>
+                  <Text style={styles.reportColor}>Check Reports</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.saleButton}
+                onPress={() => navigation.navigate('Reports')}>
+                <Text style={styles.currencyText}>₹</Text>
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>Receivable</Text>
+                  <Text style={styles.reportColor}>Check Reports</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.saleButton}
+                onPress={() => navigation.navigate('Reports')}>
+                <Text style={styles.currencyText}>₹</Text>
+                <View style={styles.textViewStyle}>
+                  <Text style={styles.saleButtonText}>Payable</Text>
+                  <Text style={styles.reportColor}>Check Reports</Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        )}
+        <Text style={styles.transaction}>RECENT TRANSACTION</Text>
+
+        {/* Show Recent Transaction */}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={{marginBottom: '100%'}}>
+            <TouchableOpacity
+              style={styles.transactionView}
+              onPress={() => handleShowPrint()}>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{color: 'black', marginLeft: 10, marginTop: 5}}>
+                  Cash Sale
+                </Text>
+                <Text style={{color: 'black', marginLeft: 190, marginTop: 5}}>
+                  2 | 06/03/2023
+                </Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{color: '#008AD0', marginLeft: 10}}>
+                  Sale: $20.0
+                </Text>
+                <Text style={{color: 'green', marginLeft: 180}}>
+                  MoneyIn: 20.0
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignSelf: 'center',
+                  marginTop: 4,
+                }}>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>UPI/BANK</Text>
+                </View>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>CASH</Text>
+                </View>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>CHEQUE</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.transactionView}
+              onPress={() => handleShowPrint()}>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{color: 'black', marginLeft: 10, marginTop: 5}}>
+                  Cash Sale
+                </Text>
+                <Text style={{color: 'black', marginLeft: 190, marginTop: 5}}>
+                  2 | 06/03/2023
+                </Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{color: '#008AD0', marginLeft: 10}}>
+                  Sale: $20.0
+                </Text>
+                <Text style={{color: 'green', marginLeft: 180}}>
+                  MoneyIn: 20.0
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignSelf: 'center',
+                  marginTop: 4,
+                }}>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>UPI/BANK</Text>
+                </View>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>CASH</Text>
+                </View>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>CHEQUE</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.transactionView}
+              onPress={() => handleShowPrint()}>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{color: 'black', marginLeft: 10, marginTop: 5}}>
+                  Cash Sale
+                </Text>
+                <Text style={{color: 'black', marginLeft: 190, marginTop: 5}}>
+                  2 | 06/03/2023
+                </Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{color: '#008AD0', marginLeft: 10}}>
+                  Sale: $250.0
+                </Text>
+                <Text style={{color: 'green', marginLeft: 180}}>
+                  MoneyIn: 250.0
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignSelf: 'center',
+                  marginTop: 4,
+                }}>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>UPI/BANK</Text>
+                </View>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>CASH</Text>
+                </View>
+                <View style={styles.paymentStyle}>
+                  <Text style={styles.paymentText}>CHEQUE</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+
+      {/* SHOW BLUETOOTH FOR CONNECT PRINTER  */}
+      <View
+        style={{
+          position: 'absolute',
+          alignSelf: 'center',
+          marginTop: '145%',
+          marginBottom: 20,
+        }}>
+        <TouchableOpacity
+          style={styles.printerButton}
+          onPress={() => navigation.navigate('Connect Printer')}>
+          {saveData ? (
+            <Text style={[styles.printerText, {color: 'green'}]}>
+              {saveData}
+            </Text>
+          ) : (
+            <Text style={styles.printerText}> CONNECT TO PRINTER </Text>
+          )}
+          <Text style={styles.permissionText}>
+            {' '}
+            PERMISSION | BLUETOOTH | LOCATION{' '}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.billButton}
+          onPress={() => navigation.navigate('Select Items')}>
+          <Text style={styles.billText}> + BILL/INVOICE</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -365,11 +431,11 @@ const styles = StyleSheet.create({
   },
   paymentStyle: {
     borderColor: 'silver',
-     borderWidth: 1, 
-     borderRadius: 5,
-     width: 110,
-     marginLeft: 3,
-     marginRight: 3,
+    borderWidth: 1,
+    borderRadius: 5,
+    width: 110,
+    marginLeft: 3,
+    marginRight: 3,
   },
   paymentText: {
     color: 'silver',
@@ -391,8 +457,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   permissionText: {
-    color: 'green', 
-    fontWeight: '600', 
+    color: 'green',
+    fontWeight: '600',
     alignSelf: 'center',
   },
 });

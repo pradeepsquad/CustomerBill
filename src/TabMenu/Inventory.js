@@ -6,15 +6,46 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  FlatList,
 } from 'react-native';
 import React, {useState} from 'react';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
+import {useSelector} from 'react-redux';
+import {newCategory} from '../Redux/reducerSlice/NewCategorySlice';
 
 export default function Inventory({navigation}) {
   const [customStyleIndex, setCustomStyleIndex] = useState(0);
+  const myCategory = useSelector(newCategory);
+  const selectCategory =
+    myCategory.payload.newCategorySlice.categoryName.categoryName;
+
+  console.log('==============================>', selectCategory);
 
   const handleCustomIndexSelect = index => {
     setCustomStyleIndex(index);
+  };
+
+  // RENDER INVENTORY
+  const renderInventory = ({item}) => {
+    return (
+      <TouchableOpacity style={styles.listView}>
+        <View style={{marginTop: 8, marginLeft: 5}}>
+          <Text style={styles.textOne}>{item.name}</Text>
+          <Text style={styles.textTwo}>
+            Sale Price: {item.price} (Purchase Price: {item.purchasePrice})
+          </Text>
+          <Text style={styles.textThree}>Current Stock: {item.stock}</Text>
+        </View>
+        <View style={{position: 'absolute', right: 10}}>
+          <Image source={require('../assets/pack.jpeg')} style={styles.image} />
+          <TouchableOpacity
+            style={styles.adjust}
+            onPress={() => navigation.navigate('Modify Item Stock')}>
+            <Text style={styles.adjustText}>Adjust Quantity</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    );
   };
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -41,105 +72,42 @@ export default function Inventory({navigation}) {
           {/* Inventory component ====================================================== */}
           {customStyleIndex === 0 && (
             <SafeAreaView style={{marginTop: 15}}>
-              <View>
-                <TouchableOpacity style={styles.listView}>
-                  <View style={{marginTop: 8, marginLeft: 5}}>
-                    <Text style={styles.textOne}>ABCD</Text>
-                    <Text style={styles.textTwo}>
-                      Sale Price: 54564 (Purchase Price: 465454)
-                    </Text>
-                    <Text style={styles.textThree}>Current Stock: 0</Text>
-                  </View>
-                  <View>
-                    <Image
-                      source={require('../assets/pack.jpeg')}
-                      style={styles.image}
-                    />
-                    <TouchableOpacity
-                      style={styles.adjust}
-                      onPress={() => navigation.navigate('Modify Item Stock')}>
-                      <Text style={styles.adjustText}>Adjust Quantity</Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
+              <FlatList
+                data={inventoryList}
+                renderItem={renderInventory}
+                scrollEnabled={true}
+                keyExtractor={item => item.id}
+              />
 
-                <TouchableOpacity style={styles.listView}>
-                  <View style={{marginTop: 8, marginLeft: 5}}>
-                    <Text style={styles.textOne}>ABCD</Text>
-                    <Text style={styles.textTwo}>
-                      Sale Price: 54564 (Purchase Price: 465454)
-                    </Text>
-                    <Text style={styles.textThree}>Current Stock: 0</Text>
-                  </View>
-
-                  <View>
-                    <Image
-                      source={require('../assets/pack.jpeg')}
-                      style={styles.image}
-                    />
-                    <TouchableOpacity
-                      style={styles.adjust}
-                      onPress={() => navigation.navigate('Modify Item Stock')}>
-                      <Text style={styles.adjustText}>Adjust Quantity</Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.listView}>
-                  <View style={{marginTop: 8, marginLeft: 5}}>
-                    <Text style={styles.textOne}>ABCD</Text>
-                    <Text style={styles.textTwo}>
-                      Sale Price: 54564 (Purchase Price: 465454)
-                    </Text>
-                    <Text style={styles.textThree}>Current Stock: 0</Text>
-                  </View>
-                  <View>
-                    <Image
-                      source={require('../assets/pack.jpeg')}
-                      style={styles.image}
-                    />
-                    <TouchableOpacity
-                      style={styles.adjust}
-                      onPress={() => navigation.navigate('Modify Item Stock')}>
-                      <Text style={styles.adjustText}>Adjust Quantity</Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              {/* New Item Button */}
+              {/* ITEM BUTTON */}
               <TouchableOpacity
                 style={styles.newItemButton}
                 onPress={() => navigation.navigate('New Item')}>
-                <Text style={styles.newItemText}> NEW ITEM </Text>
+                <Text style={styles.newItemText}> + ITEM </Text>
               </TouchableOpacity>
             </SafeAreaView>
           )}
           {/* Categories Component ===================================================== */}
           {customStyleIndex === 1 && (
             <SafeAreaView style={{marginTop: 15}}>
-              <View>
-                <TouchableOpacity
-                  style={{backgroundColor: 'white', height: 40, marginTop: 8}}>
-                  <Text
-                    style={{fontWeight: 'bold', color: 'black', margin: 10}}>
-                    ABCD
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{backgroundColor: 'white', height: 40, marginTop: 8}}>
-                  <Text
-                    style={{fontWeight: 'bold', color: 'black', margin: 10}}>
-                    EFGH
-                  </Text>
-                </TouchableOpacity>
+              <View
+                style={{
+                  height: 40,
+                  marginTop: 8,
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: 'silver',
+                }}>
+                <Text style={{fontWeight: 'bold', color: 'black', margin: 10}}>
+                  {selectCategory}
+                </Text>
               </View>
+
               {/* New Categories Button */}
               <TouchableOpacity
                 style={styles.newCategoryButton}
                 onPress={() => navigation.navigate('New Item Category')}>
-                <Text style={styles.newItemText}> NEW CATEGORIES </Text>
+                <Text style={styles.newItemText}> + CATEGORIES </Text>
               </TouchableOpacity>
             </SafeAreaView>
           )}
@@ -164,12 +132,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   textTwo: {
-    // color: 'silver',
+    color: 'gray',
     fontSize: 11,
     fontWeight: '600',
   },
   textThree: {
-    // color: 'silver',
+    color: 'gray',
     fontSize: 11,
     fontWeight: '600',
     color: 'red',
@@ -180,9 +148,12 @@ const styles = StyleSheet.create({
     width: 100,
     marginBottom: 10,
     borderRadius: 15,
-    alignSelf: 'flex-end',
+    // alignSelf: 'flex-end',
     marginHorizontal: 20,
-    marginTop: 400,
+    // marginTop: 250,
+    position: 'absolute',
+    bottom: 10,
+    right: 0,
   },
   newCategoryButton: {
     backgroundColor: '#008AD0',
@@ -220,3 +191,30 @@ const styles = StyleSheet.create({
     padding: 3,
   },
 });
+
+const inventoryList = [
+  {
+    name: 'ITEM NAME',
+    price: 20,
+    purchasePrice: 15,
+    stock: 10,
+  },
+  {
+    name: 'item_1',
+    price: 20,
+    purchasePrice: 15,
+    stock: 10,
+  },
+  {
+    name: 'item_2',
+    price: 20,
+    purchasePrice: 15,
+    stock: 10,
+  },
+  {
+    name: 'item_3',
+    price: 20,
+    purchasePrice: 15,
+    stock: 10,
+  },
+];

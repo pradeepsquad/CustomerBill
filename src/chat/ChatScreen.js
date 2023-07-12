@@ -6,7 +6,6 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState} from 'react';
 
@@ -32,6 +31,7 @@ export default function ChatScreen() {
           <TextInput
             style={styles.inputText}
             placeholder="Enter your message"
+            placeholderTextColor="silver"
             multiline={true}
             value={message}
             onChangeText={message => setMessage(message)}

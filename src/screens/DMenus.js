@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {Text, View, Image, TouchableOpacity, StyleSheet, Alert, ToastAndroid} from 'react-native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -10,7 +10,8 @@ import {
 import 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
-
+import {useDispatch} from 'react-redux';
+import {imageSupplier} from '../Redux/reducerSlice/ProfileImageSlice';
 import SaleListScreen from '../DrawerMenu/SaleListScreen';
 import ReportScreen from '../DrawerMenu/ReportScreen';
 import PurchaseList from '../DrawerMenu/PurchaseList';
@@ -276,10 +277,12 @@ export default function DMenus() {
   );
 }
 
-// Custom Drawer Menus
+// CUSTOM DRAWER MENUS
 function CustomDrawerContent(props, {navigation}) {
   const [filePath, setFilePath] = useState();
-  // upload Profile
+  const dispatch = useDispatch();
+
+  // UPLOAD PROFILE
   const handleUploadImages = type => {
     let options = {
       mediaType: type,
@@ -288,23 +291,46 @@ function CustomDrawerContent(props, {navigation}) {
       quality: 1,
     };
     launchImageLibrary(options, response => {
-      console.log('Response = ', response);
-
+      // console.log('Response = ', response);
       if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        console.log('User cancelled camera picker');
+        ToastAndroid.showWithGravityAndOffset(
+          'User cancelled camera picker',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        console.log('Camera not available on device');
+        ToastAndroid.showWithGravityAndOffset(
+          'Camera not available on device',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Camera not available on device');
         return;
       } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        console.log('Permission not satisfied');
+        ToastAndroid.showWithGravityAndOffset(
+          'Permission not satisfied',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        console.log(response.errorMessage);
+        ToastAndroid.showWithGravityAndOffset(
+          response.errorMessage,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log(response.errorMessage);
         return;
       }
       // console.log('base64 -> ', response.assets[0].base64);
@@ -315,7 +341,10 @@ function CustomDrawerContent(props, {navigation}) {
       // console.log('type -> ', response.assets[0].type);
       // console.log('fileName -> ', response.assets[0].fileName);
       setFilePath(response.assets[0].uri);
+      dispatch(imageSupplier(response.assets[0].uri));
     });
+    
+    
   };
   return (
     <DrawerContentScrollView {...props} showsVerticalScrollIndicator={false}>

@@ -11,21 +11,15 @@ import React, {useState, useEffect} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icons from 'react-native-vector-icons/Ionicons';
 
+const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year']; 
+
 export default function SaleListScreen({navigation}) {
   const [selectedDays, setSelectedDays] = useState(0);
-  const [startDate, setStartDate] = useState('09/10/2020');
-  const [endDate, setEndDate] = useState(null);
+  const currentDate = new Date();
+  const startDate = currentDate.toLocaleDateString();
+  const endDate = currentDate.toLocaleDateString();
   
-
-  useEffect(() => {
-    let today = new Date();
-    let date = today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setStartDate(date);
-    setEndDate(date);
-    
-  },[]);
-
-  const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
+  
   return (
     <SafeAreaView styles={{flex: 1}}>
       
@@ -55,6 +49,7 @@ export default function SaleListScreen({navigation}) {
           {/* started Date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
@@ -62,6 +57,7 @@ export default function SaleListScreen({navigation}) {
           {/* End date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={endDate}
             onChangeText={(endDate) => setEndDate(endDate)}
           />      
@@ -69,11 +65,11 @@ export default function SaleListScreen({navigation}) {
           {/* Amount and Count */}
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <View style={styles.AmountView}>
-              <Text style={{alignSelf: 'center'}}>Amount</Text>
+              <Text style={{alignSelf: 'center', color: 'silver'}}>Amount</Text>
               <Text style={{color: '#008AD0', alignSelf: 'center'}}>₹ 0</Text>
             </View>
             <View style={styles.AmountView}>
-              <Text style={{alignSelf: 'center'}}>Count</Text>
+              <Text style={{alignSelf: 'center', color: 'silver'}}>Count</Text>
               <Text style={{color: 'red', alignSelf: 'center'}}>0</Text>
             </View>
           </View>
@@ -85,7 +81,7 @@ export default function SaleListScreen({navigation}) {
       </ScrollView>
 
       <TouchableOpacity style={styles.newButton} onPress={() => navigation.navigate('Select Items')}>
-        <Text style={styles.buttonText}>NEW BILL/INVOICE</Text>
+        <Text style={styles.buttonText}>+  SALE/INVOICE</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

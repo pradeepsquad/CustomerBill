@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icons from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
+import { useSelector } from 'react-redux';
+import { imageSupplier } from '../Redux/reducerSlice/ProfileImageSlice';
 
 export default function Profile() {
   const [showUpi, setShowUpi] = useState(false);
@@ -41,6 +44,9 @@ export default function Profile() {
   const [bankName, setBankName] = useState('');
   const [upiID, setUpiId] = useState('');
   const [aboutBusiness, setAboutBusiness] = useState('');
+
+  const profileDp = useSelector(imageSupplier)
+  const imagePath = profileDp.payload.profileImageSlice.filePath
 
   const businessType = [
     'Food/Restaurant/Hotel',
@@ -137,7 +143,9 @@ export default function Profile() {
     'Services',
     'Wholesaler',
   ];
-  // handle Aadhaar Front
+
+
+  // HANDLE AADHAAR FRONT
   const handleAadhaarFront = type => {
     let options = {
       mediaType: type,
@@ -150,20 +158,44 @@ export default function Profile() {
       console.log('Response = ', response);
 
       if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        console.log('User cancelled camera picker');
+        ToastAndroid.showWithGravityAndOffset(
+          'User cancelled camera picker',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        console.log('Camera not available on device');
+        ToastAndroid.showWithGravityAndOffset(
+          'Camera not available on device',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Camera not available on device');
         return;
       } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        console.log('Permission not satisfied');
+        ToastAndroid.showWithGravityAndOffset(
+          'Permission not satisfied',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        console.log(response.errorMessage);
+        ToastAndroid.showWithGravityAndOffset(
+          response.errorMessage,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log(response.errorMessage);
         return;
       }
       // console.log('base64 -> ', response.assets[0].base64);
@@ -176,7 +208,8 @@ export default function Profile() {
       setAadhaarFront(response.assets[0].uri);
     });
   };
-  // handle Aadhaar Back
+
+  // HANDLE AADHAAR BACK
   const handleAadhaarBack = type => {
     let options = {
       mediaType: type,
@@ -184,25 +217,47 @@ export default function Profile() {
       maxHeight: 550,
       quality: 1,
     };
-
     launchImageLibrary(options, response => {
-      console.log('Response = ', response);
-
+      // console.log('Response = ', response);
       if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        console.log('User cancelled camera picker');
+        ToastAndroid.showWithGravityAndOffset(
+          'User cancelled camera picker',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        console.log('Camera not available on device');
+        ToastAndroid.showWithGravityAndOffset(
+          'Camera not available on device',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Camera not available on device');
         return;
       } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        console.log('Permission not satisfied');
+        ToastAndroid.showWithGravityAndOffset(
+          'Permission not satisfied',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        console.log(response.errorMessage);
+        ToastAndroid.showWithGravityAndOffset(
+          response.errorMessage,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log(response.errorMessage);
         return;
       }
       // console.log('base64 -> ', response.assets[0].base64);
@@ -215,7 +270,8 @@ export default function Profile() {
       setAadhaarBack(response.assets[0].uri);
     });
   };
-  // handle pan Card
+
+  // HANDLE PAN CARD
   const handlePanCard = type => {
     let options = {
       mediaType: type,
@@ -223,25 +279,48 @@ export default function Profile() {
       maxHeight: 550,
       quality: 1,
     };
-
     launchImageLibrary(options, response => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        console.log('User cancelled camera picker');
+         ToastAndroid.showWithGravityAndOffset(
+          'User cancelled camera picker',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        console.log('Camera not available on device');
+        ToastAndroid.showWithGravityAndOffset(
+          'Camera not available on device',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Camera not available on device');
         return;
       } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        console.log('Permission not satisfied');
+        ToastAndroid.showWithGravityAndOffset(
+          'Permission not satisfied',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        console.log(response.errorMessage);
+        ToastAndroid.showWithGravityAndOffset(
+          response.errorMessage,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log(response.errorMessage);
         return;
       }
       // console.log('base64 -> ', response.assets[0].base64);
@@ -254,46 +333,78 @@ export default function Profile() {
       setPanCard(response.assets[0].uri);
     });
   };
-  // handle Display
-  const handleDisplayPic = type => {
-    let options = {
-      mediaType: type,
-      maxWidth: 300,
-      maxHeight: 550,
-      quality: 1,
-    };
 
-    launchImageLibrary(options, response => {
-      console.log('Response = ', response);
+  // HANDLE DISPLAY PIC
+  // const handleDisplayPic = type => {
+  //   let options = {
+  //     mediaType: type,
+  //     maxWidth: 300,
+  //     maxHeight: 550,
+  //     quality: 1,
+  //   };
+  //   launchImageLibrary(options, response => {
+  //     console.log('Response = ', response);
 
-      if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        console.log('User cancelled camera picker');
-        return;
-      } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        console.log('Camera not available on device');
-        return;
-      } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        console.log('Permission not satisfied');
-        return;
-      } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        console.log(response.errorMessage);
-        return;
-      }
-      // console.log('base64 -> ', response.assets[0].base64);
-      // console.log('uri -> ', response.assets[0].uri);
-      // console.log('width -> ', response.assets[0].width);
-      // console.log('height -> ', response.assets[0].height);
-      // console.log('fileSize -> ', response.assets[0].fileSize);
-      // console.log('type -> ', response.assets[0].type);
-      // console.log('fileName -> ', response.assets[0].fileName);
-      setFilePath(response.assets[0].uri);
-    });
-  };
-  // upload dashboard
+  //     if (response.didCancel) {
+  //       ToastAndroid.showWithGravityAndOffset(
+  //         'User cancelled camera picker',
+  //         ToastAndroid.LONG,
+  //         ToastAndroid.CENTER,
+  //         100,
+  //         100,
+  //       );
+  //       // console.log('User cancelled camera picker');
+  //       return;
+  //     } else if (response.errorCode == 'camera_unavailable') {
+  //       ToastAndroid.showWithGravityAndOffset(
+  //         'Camera not available on device',
+  //         ToastAndroid.LONG,
+  //         ToastAndroid.CENTER,
+  //         100,
+  //         100,
+  //       );
+  //       // console.log('Camera not available on device');
+  //       return;
+  //     } else if (response.errorCode == 'permission') {
+  //       ToastAndroid.showWithGravityAndOffset(
+  //         'Permission not satisfied',
+  //         ToastAndroid.LONG,
+  //         ToastAndroid.CENTER,
+  //         100,
+  //         100,
+  //       );
+  //       // console.log('Permission not satisfied');
+  //       return;
+  //     } else if (response.errorCode == 'others') {
+  //       ToastAndroid.showWithGravityAndOffset(
+  //         response.errorMessage,
+  //         ToastAndroid.LONG,
+  //         ToastAndroid.CENTER,
+  //         100,
+  //         100,
+  //       );
+  //       // console.log(response.errorMessage);
+  //       return;
+  //     }
+  //     // console.log('base64 -> ', response.assets[0].base64);
+  //     // console.log('uri -> ', response.assets[0].uri);
+  //     // console.log('width -> ', response.assets[0].width);
+  //     // console.log('height -> ', response.assets[0].height);
+  //     // console.log('fileSize -> ', response.assets[0].fileSize);
+  //     // console.log('type -> ', response.assets[0].type);
+  //     // console.log('fileName -> ', response.assets[0].fileName);
+  //     setFilePath(response.assets[0].uri);
+  //   });
+  // };
+  const handleDisplayPic = () => {
+    return(
+      <View style={{flex: 1}}>
+        <Image source={{uri: imagePath}} style={{height: 200, width: 200}}/>
+      </View>
+    );
+  }
+
+  // UPLOAD DASHBOARD
   const handleDashboard = type => {
     let options = {
       mediaType: type,
@@ -301,25 +412,47 @@ export default function Profile() {
       maxHeight: 550,
       quality: 1,
     };
-
     launchImageLibrary(options, response => {
       console.log('Response = ', response);
-
       if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        console.log('User cancelled camera picker');
+        ToastAndroid.showWithGravityAndOffset(
+          'User cancelled camera picker',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        console.log('Camera not available on device');
+        ToastAndroid.showWithGravityAndOffset(
+          'Camera not available on device',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Camera not available on device');
         return;
       } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        console.log('Permission not satisfied');
+        ToastAndroid.showWithGravityAndOffset(
+          'Permission not satisfied',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        console.log(response.errorMessage);
+        ToastAndroid.showWithGravityAndOffset(
+          response.errorMessage,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log(response.errorMessage);
         return;
       }
       // console.log('base64 -> ', response.assets[0].base64);
@@ -332,7 +465,8 @@ export default function Profile() {
       setDashboardPath(response.assets[0].uri);
     });
   };
-  // upload signature
+
+  // UPLOAD SIGNATURE
   const handleSignature = type => {
     let options = {
       mediaType: type,
@@ -340,32 +474,54 @@ export default function Profile() {
       maxHeight: 550,
       quality: 1,
     };
-
     launchImageLibrary(options, response => {
       console.log('Response = ', response);
-
       if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        console.log('User cancelled camera picker');
+        ToastAndroid.showWithGravityAndOffset(
+          'User cancelled camera picker',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        console.log('Camera not available on device');
+        ToastAndroid.showWithGravityAndOffset(
+          'Camera not available on device',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Camera not available on device');
         return;
       } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        console.log('Permission not satisfied');
+        ToastAndroid.showWithGravityAndOffset(
+          'Permission not satisfied',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        console.log(response.errorMessage);
+        ToastAndroid.showWithGravityAndOffset(
+          response.errorMessage,
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+          100,
+          100,
+        );
+        // console.log(response.errorMessage);
         return;
       }
       setSignaturePath(response.assets[0].uri);
     });
   };
 
-  // handle Save bUtton
+  // HANDEL SAVE BUTTON
   const handleSaveButton = () => {
     console.log(
       selectBusiness,
@@ -387,18 +543,19 @@ export default function Profile() {
       businessCategory,
     );
   };
+
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{marginTop: 30, marginHorizontal: 20, marginBottom: 150}}>
-          <TouchableOpacity onPress={() => handleDisplayPic('photo')}>
-            
-          {!filePath ?<Image
+
+          <TouchableOpacity onPress={() => handleDisplayPic()}>
+          {!imagePath ?<Image
               source={require('../assets/pack.jpeg')}
               style={styles.image}
             />
             :<Image
-              source={{uri: filePath}}
+              source={{uri: imagePath}}
               style={styles.image}
             />}
           </TouchableOpacity>
@@ -463,6 +620,7 @@ export default function Profile() {
               <Text style={styles.buttonText}>BUSINESS DETAILS</Text>
             </TouchableOpacity>
           </View>
+
           {/* SHOW BUSINESS DETAILS */}
           {!showBusiness ? null : (
             <View>
@@ -527,6 +685,7 @@ export default function Profile() {
               BANK DETAILS (ACCEPT ONLINE PAYMENTS)
             </Text>
           </TouchableOpacity>
+
           {/* SHOW BANK DETAILS */}
           {!showBankDetails ? null : (
             <View>
@@ -733,8 +892,8 @@ const styles = StyleSheet.create({
     width: 130,
     borderRadius: 130 / 2,
     alignSelf: 'center',
-    borderColor: 'green',
-    borderWidth: 4,
+    borderColor: 'silver',
+    borderWidth: 2,
   },
   textInput: {
     borderWidth: 1,

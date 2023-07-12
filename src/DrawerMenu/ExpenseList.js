@@ -1,22 +1,17 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput} from 'react-native'
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import SelectDropdown from 'react-native-select-dropdown';
 import Icons from 'react-native-vector-icons/Ionicons';
 
 export default function ExpenseList({navigation}) {
   const [selectedDays, setSelectedDays] = useState(0);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const currentDate = new Date();
+  const startDate = currentDate.toLocaleDateString();
+  const endDate = currentDate.toLocaleDateString();
   
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
 
-  useEffect(() => {
-    let today = new Date();
-    let date = today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setStartDate(date);
-    setEndDate(date);
-    
-  },[]);
+  
 
   return (
     <SafeAreaView styles={{flex: 1}}>
@@ -54,6 +49,7 @@ export default function ExpenseList({navigation}) {
           {/* End date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={endDate}
             onChangeText={(endDate) => setEndDate(endDate)}
           />

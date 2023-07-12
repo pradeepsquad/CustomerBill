@@ -5,16 +5,11 @@ import Icons from 'react-native-vector-icons/Ionicons';
 
 export default function MoneyOutList({navigation}) {
   const [selectedDays, setSelectedDays] = useState(0);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const currentDate = new Date();
+  const startDate = currentDate.toLocaleDateString();
+  const endDate = currentDate.toLocaleDateString();
 
-  useEffect(() => {
-    let today = new Date();
-    let date = today.getDate() + '/' + today.getMonth() + 1 + '/' + today.getFullYear();
-    setStartDate(date);
-    setEndDate(date);
-    
-  },[]);
+  
 
   const selectDays = ['Today', 'Last Week', 'Last Month', 'Last Year'];
   return (
@@ -46,6 +41,7 @@ export default function MoneyOutList({navigation}) {
           {/* started Date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={startDate}
             onChangeText={(startDate) => setStartDate(startDate)}
           />
@@ -53,6 +49,7 @@ export default function MoneyOutList({navigation}) {
           {/* End date */}
           <TextInput 
             style={styles.textInput}
+            placeholderTextColor="silver"
             value={endDate}
             onChangeText={(endDate) => setEndDate(endDate)}
           />

@@ -28,6 +28,8 @@ import EditProfile from './src/Profile/EditProfile';
 import ChatScreen from './src/chat/ChatScreen';
 import ModifyStock from './src/ExtraScreen/ModifyStock';
 import Profile from './src/ExtraScreen/Profile';
+import PrintDetails from './src/ExtraScreen/PrintDetails';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -227,7 +229,7 @@ const StackComponent = () => {
           }}
         />
 
-<Stack.Screen
+        <Stack.Screen
           name="Modify Item Stock"
           component={ModifyStock}
           options={{
@@ -245,6 +247,21 @@ const StackComponent = () => {
         <Stack.Screen
           name="Edit Profile"
           component={Profile}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#008AD0',
+            },
+            headerTintColor: 'white',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: 'white',
+            },
+          }}
+        />
+            <Stack.Screen
+          name="New Sale"
+          component={PrintDetails}
           options={{
             headerShown: true,
             headerStyle: {
@@ -285,7 +302,7 @@ if(confirmation){return (
           <TextInput
             style={styles.textInput}
             placeholder="Phone Number"
-            placeholderTextColor="black"
+            placeholderTextColor="silver"
             value={phone}
             onChangeText={(phone) => setPhone(phone)}
           />

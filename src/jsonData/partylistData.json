@@ -1,0 +1,10 @@
+{
+        "partyListData": [
+            {
+                "name": "abc",
+                "phone": "12345",
+                "BillingType": "REGULAR",
+                "Ratings": ""
+            }    
+        ]
+}
